@@ -245,3 +245,8 @@ first we store the theme perferences using the
     ->from this is displaying the bottom navigation bar
         -> it is easy to develop the bottom navigation bar
             ->first we set Btm_index = 0 of type int
+    ->widgets
+        ->Textwidget
+            ->overflow property in the style of text widget
+                -> overflow.elipse is used
+                    -> when the text is fit in the screen it uses (....)

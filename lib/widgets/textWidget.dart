@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 class TextWidget extends StatelessWidget {
-  const TextWidget({Key? key,required this.title,required this.color,required this.fontweight,this.istitle = false, this.maxlines = 10}) : super(key: key);
+   TextWidget({Key? key,required this.title,required this.color,required this.fontweight,this.istitle = false, this.maxlines = 10}) : super(key: key);
   final String title;
   final Color color;
   final double fontweight;
@@ -9,6 +9,6 @@ class TextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Text(title,style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),);
+    return Text(title,style: TextStyle(color: color,fontSize: fontweight,fontWeight:istitle? FontWeight.bold: FontWeight.normal),);
   }
 }
