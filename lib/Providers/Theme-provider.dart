@@ -1,4 +1,4 @@
-
+// this is used to check the change and from user
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_proj/services/darktheme_preferences.dart';
 class themeProvider with ChangeNotifier{

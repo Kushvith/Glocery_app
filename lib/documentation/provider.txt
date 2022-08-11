@@ -1,0 +1,49 @@
+ -> provider is used to check the user as changed the theme or not
+        ->with keyword
+            ->with keyword is used to define the multilevel inheritance
+            ->it means that the method cannot be implemented in one class
+            ->refer "stackflow :.com/questions/57243896/with-keyword-in-flutter"
+        -> here class themeProvider with ChangeNotifier{
+            ->themeProvider is the class name
+            -> here we can use extend or with (maxin) to inherit the methods in changeNotifier
+                -> for importing change notifier
+                    ->import 'package:flutter/cupertino.dart';
+                        ->this library should downloaded from "provider"
+            -> we intialize darktheme with false as datatype bool
+            -> create the objec of shared preference to get or set the value
+                ->Dark_theme_pref pref = Dark_theme_pref();
+            ->in above we used the get and set as methods to implement
+                ->in this we use the getter and setters as short and functions
+                    ->ie getter and setters are the keywords to get or set the value
+            -> it should get the theme from shared preference and stored darktheme variable declared above
+                ->bool get getDarktheme => darktheme;
+                    ->here bool is the return type
+                    ->getDarktheme is method name prefixed with get
+                        -> get will return a value
+            ->set method used to set the value for the shared preference method
+                 ->here the setter method should implement the body
+                    -> set setDarktheme(bool value){
+                          darktheme = value;
+                          pref.setTheme(value);
+                          notifyListeners();
+                        }
+                 -> setter method will not have the return type
+                    ->we assign the value to the darktheme
+                    ->we pref settheme is used to change the value in the disk
+                    -> notifyListners will listen and rebuilt the widgets
+            -> complete code for the shared preferences
+                ->// this is used to check the change and from user
+                  import 'package:flutter/cupertino.dart';
+                  import 'package:flutter_proj/services/darktheme_preferences.dart';
+                  class themeProvider with ChangeNotifier{
+                    bool darktheme = false;
+                    Dark_theme_pref pref = Dark_theme_pref();
+                    bool get getDarktheme => darktheme;
+                    set setDarktheme(bool value){
+                      darktheme = value;
+                      pref.setTheme(value);
+                      notifyListeners();
+                    }
+
+
+                  }

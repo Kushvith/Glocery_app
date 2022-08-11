@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_proj/Providers/Theme-provider.dart';
 import 'package:flutter_proj/Screens/Home_screens.dart';
+import 'package:flutter_proj/Screens/btm_screen.dart';
 import 'package:flutter_proj/consts/ThemeData.dart';
 import 'package:flutter_proj/services/darktheme_preferences.dart';
 import 'package:provider/provider.dart';
@@ -39,10 +40,10 @@ class _MyAppState extends State<MyApp> {
         builder: (context,themeProvider,child) {
          bool  a = themeprovider.getDarktheme;
           return MaterialApp(
-          title: 'Flutter Demo',
+          title: 'MultiStore App',
           theme: Styles.themeData(a, context),
           debugShowCheckedModeBanner: false,
-          home: HomeScreen(),
+          home: Btm_screeen(),
     );
         }
       ),

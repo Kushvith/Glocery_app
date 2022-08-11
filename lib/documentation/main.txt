@@ -1,0 +1,109 @@
+   ->this peice code to is used  get the theme from disk and stored in the main method
+        ->themeProvider themeprovider = themeProvider();
+
+            void gettheme() async{
+              themeprovider.setDarktheme = await themeprovider.pref.getTheme();
+            }
+            -> themeprovider.pref.getTheme() this data was getting from the shared preferences
+            -> setting for the setDarktheme
+    -> initState is called only once when the stateful widget is called
+        @override
+          void initState() {
+            // TODO: implement initState
+          gettheme();
+            super.initState();
+          }
+          ->@override method is used to override the method in the super class with same method
+          -> initState is the best place to call the gettheme method
+          ->super.initstate is called in the same method to execute once
+      @override
+      Widget build(BuildContext context) {
+        ->is used to build the widget
+          -> here the code starts from here
+        -> this method should return widget it may be materialApp or something
+        -> buildContext is used to locate where the widget is located in the widget tree
+      ->MultiProvider
+        ->is used to send some values to the widgets using the providers list
+        ->it is used to send multiple providers
+      -> ChangeNotifierProvider(create: (_){
+                return themeprovider;
+              })
+         -> eg:Provider<string or class or object>(create: (_){"something"or class contains text or int})
+      ->consumer
+        -> consumer is used to refuse from the rebuilt of all widgets
+         child :Consumer<themeProvider>(
+                builder: (context,themeProvider,child) {
+                 bool  a = themeprovider.getDarktheme;
+                  return MaterialApp(
+                  title: 'MultiStore App',
+                  theme: Styles.themeData(a, context),
+                  debugShowCheckedModeBanner: false,
+                  home: Btm_screeen(),
+            );
+                }
+              ),
+              consumer <classname to rebuild>
+                ->builder widget takes three parameters(context,themeprovider,child)
+                ->themeprovider is the dynamic value of class name
+                ->here we accessing the object declared with that name
+                ->we are assigning the values to var a of type bool
+                consumer can return the widget of MaterialApp
+      ->materialApp
+        ->it consists of title,theme,home etc
+        ->title is used to display on the multitask bar
+        ->home is used to display at the screen
+
+            -> complete main method code
+                ->import 'package:flutter/material.dart';
+                  import 'package:flutter_proj/Providers/Theme-provider.dart';
+                  import 'package:flutter_proj/Screens/Home_screens.dart';
+                  import 'package:flutter_proj/Screens/btm_screen.dart';
+                  import 'package:flutter_proj/consts/ThemeData.dart';
+                  import 'package:flutter_proj/services/darktheme_preferences.dart';
+                  import 'package:provider/provider.dart';
+                  void main() {
+                    runApp( MyApp());
+                  }
+
+                  class MyApp extends StatefulWidget {
+                     MyApp({Key? key}) : super(key: key);
+
+                    @override
+                    State<MyApp> createState() => _MyAppState();
+                  }
+
+                  class _MyAppState extends State<MyApp> {
+                    themeProvider themeprovider = themeProvider();
+
+                    void gettheme() async{
+                      themeprovider.setDarktheme = await themeprovider.pref.getTheme();
+                    }
+                  @override
+                    void initState() {
+                      // TODO: implement initState
+                    gettheme();
+                      super.initState();
+                    }
+                    @override
+                    Widget build(BuildContext context) {
+                      return MultiProvider(
+                        providers: [
+                          ChangeNotifierProvider(create: (_){
+                            return themeprovider;
+                          })
+                        ],
+                        child :Consumer<themeProvider>(
+                          builder: (context,themeProvider,child) {
+                           bool  a = themeprovider.getDarktheme;
+                            return MaterialApp(
+                            title: 'MultiStore App',
+                            theme: Styles.themeData(a, context),
+                            debugShowCheckedModeBanner: false,
+                            home: Btm_screeen(),
+                      );
+                          }
+                        ),
+                      );
+                    }
+                  }
+

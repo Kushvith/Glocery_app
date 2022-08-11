@@ -1,0 +1,51 @@
+first we store the theme perferences using the
+    -> shared preferences for storing the dark or light theme
+        -> this thing was demonstrated on the
+            ->services
+                ->dark theme preferences file
+                -> this shared preferences uses the async and await keywords
+                -> we first intialized the variable which is static holds one memory space
+                    -> we assign some string to hold the value
+                        ->in our case we use "STATUSTHEME"
+                            ->static var StatusTheme = "STATUSTHEME";
+                        ->this used in getter and setter method
+                -> now we will implement the setTheme method
+                    -> setTheme method as the arguments Bool value
+                        -> value should be either true or false to set the theme
+                    -> intialising the object for the shared preference class
+                        ->import statement for preference
+                            ->import 'package:shared_preferences/shared_preferences.dart';
+                        -> SharedPreferences pref = await SharedPreferences.getInstance();
+                            ->here the getInstance is used for loads and parses the shared preference from the disk
+                        ->to store the value in the local disk
+                            -> pref.getBool(StatusTheme,value)
+                                ->the value is passed from the argument
+                                -> StatusTheme is a static variable to store the boolean value
+                                ->pref object can store string,double,int etc
+                -> now we will implement the getter method without using getter
+                    ->getTheme method is used to read the values from the disk
+                        ->get method consists of future return back from the method
+                            ->Future works same like the try and catch
+                            ->it should return the value or handle the error
+                            ->Future <bool> getTheme() async{
+                    -> intialising the object the same as in the setter method
+                    ->we can get the value from the disk
+                        ->return prefs.getBool(StatusTheme) ?? false;
+                            -> returns the boolean value or error
+                            ->?? is used to intialize default value to false
+                                -> which means darktheme to false
+                            ->   prefs.getBool(StatusTheme) if it fails to get value it will defaultly assign value to false
+                -> code for the shared preference
+                        import 'package:shared_preferences/shared_preferences.dart';
+                        //used to store the dark theme value in bool
+                        class Dark_theme_pref{
+                          static var StatusTheme = "STATUSTHEME";
+                          setTheme(bool value) async{
+                            SharedPreferences pref = await SharedPreferences.getInstance();
+                            pref.setBool(StatusTheme, value);
+                          }
+                          Future <bool> getTheme() async{
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            return prefs.getBool(StatusTheme) ?? false;
+                          }
+                        }

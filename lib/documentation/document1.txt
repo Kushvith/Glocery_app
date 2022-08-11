@@ -1,0 +1,247 @@
+multistore apk
+first we store the theme perferences using the
+    -> shared preferences for storing the dark or light theme
+        -> this thing was demonstrated on the
+            ->services
+                ->dark theme preferences file
+                -> this shared preferences uses the async and await keywords
+                -> we first intialized the variable which is static holds one memory space
+                    -> we assign some string to hold the value
+                        ->in our case we use "STATUSTHEME"
+                            ->static var StatusTheme = "STATUSTHEME";
+                        ->this used in getter and setter method
+                -> now we will implement the setTheme method
+                    -> setTheme method as the arguments Bool value
+                        -> value should be either true or false to set the theme
+                    -> intialising the object for the shared preference class
+                        ->import statement for preference
+                            ->import 'package:shared_preferences/shared_preferences.dart';
+                        -> SharedPreferences pref = await SharedPreferences.getInstance();
+                            ->here the getInstance is used for loads and parses the shared preference from the disk
+                        ->to store the value in the local disk
+                            -> pref.getBool(StatusTheme,value)
+                                ->the value is passed from the argument
+                                -> StatusTheme is a static variable to store the boolean value
+                                ->pref object can store string,double,int etc
+                -> now we will implement the getter method without using getter
+                    ->getTheme method is used to read the values from the disk
+                        ->get method consists of future return back from the method
+                            ->Future works same like the try and catch
+                            ->it should return the value or handle the error
+                            ->Future <bool> getTheme() async{
+                    -> intialising the object the same as in the setter method
+                    ->we can get the value from the disk
+                        ->return prefs.getBool(StatusTheme) ?? false;
+                            -> returns the boolean value or error
+                            ->?? is used to intialize default value to false
+                                -> which means darktheme to false
+                            ->   prefs.getBool(StatusTheme) if it fails to get value it will defaultly assign value to false
+                -> code for the shared preference
+                        import 'package:shared_preferences/shared_preferences.dart';
+                        //used to store the dark theme value in bool
+                        class Dark_theme_pref{
+                          static var StatusTheme = "STATUSTHEME";
+                          setTheme(bool value) async{
+                            SharedPreferences pref = await SharedPreferences.getInstance();
+                            pref.setBool(StatusTheme, value);
+                          }
+                          Future <bool> getTheme() async{
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            return prefs.getBool(StatusTheme) ?? false;
+                          }
+                        }
+    -> provider is used to check the user as changed the theme or not
+        ->with keyword
+            ->with keyword is used to define the multilevel inheritance
+            ->it means that the method cannot be implemented in one class
+            ->refer "stackflow :.com/questions/57243896/with-keyword-in-flutter"
+        -> here class themeProvider with ChangeNotifier{
+            ->themeProvider is the class name
+            -> here we can use extend or with (maxin) to inherit the methods in changeNotifier
+                -> for importing change notifier
+                    ->import 'package:flutter/cupertino.dart';
+                        ->this library should downloaded from "provider"
+            -> we intialize darktheme with false as datatype bool
+            -> create the objec of shared preference to get or set the value
+                ->Dark_theme_pref pref = Dark_theme_pref();
+            ->in above we used the get and set as methods to implement
+                ->in this we use the getter and setters as short and functions
+                    ->ie getter and setters are the keywords to get or set the value
+            -> it should get the theme from shared preference and stored darktheme variable declared above
+                ->bool get getDarktheme => darktheme;
+                    ->here bool is the return type
+                    ->getDarktheme is method name prefixed with get
+                        -> get will return a value
+            ->set method used to set the value for the shared preference method
+                 ->here the setter method should implement the body
+                    -> set setDarktheme(bool value){
+                          darktheme = value;
+                          pref.setTheme(value);
+                          notifyListeners();
+                        }
+                 -> setter method will not have the return type
+                    ->we assign the value to the darktheme
+                    ->we pref settheme is used to change the value in the disk
+                    -> notifyListners will listen and rebuilt the widgets
+            -> complete code for the shared preferences
+                ->// this is used to check the change and from user
+                  import 'package:flutter/cupertino.dart';
+                  import 'package:flutter_proj/services/darktheme_preferences.dart';
+                  class themeProvider with ChangeNotifier{
+                    bool darktheme = false;
+                    Dark_theme_pref pref = Dark_theme_pref();
+                    bool get getDarktheme => darktheme;
+                    set setDarktheme(bool value){
+                      darktheme = value;
+                      pref.setTheme(value);
+                      notifyListeners();
+                    }
+
+
+                  }
+    ->this peice code to is used  get the theme from disk and stored in the main method
+        ->themeProvider themeprovider = themeProvider();
+
+            void gettheme() async{
+              themeprovider.setDarktheme = await themeprovider.pref.getTheme();
+            }
+            -> themeprovider.pref.getTheme() this data was getting from the shared preferences
+            -> setting for the setDarktheme
+    -> initState is called only once when the stateful widget is called
+        @override
+          void initState() {
+            // TODO: implement initState
+          gettheme();
+            super.initState();
+          }
+          ->@override method is used to override the method in the super class with same method
+          -> initState is the best place to call the gettheme method
+          ->super.initstate is called in the same method to execute once
+      @override
+      Widget build(BuildContext context) {
+        ->is used to build the widget
+          -> here the code starts from here
+        -> this method should return widget it may be materialApp or something
+        -> buildContext is used to locate where the widget is located in the widget tree
+      ->MultiProvider
+        ->is used to send some values to the widgets using the providers list
+        ->it is used to send multiple providers
+      -> ChangeNotifierProvider(create: (_){
+                return themeprovider;
+              })
+         -> eg:Provider<string or class or object>(create: (_){"something"or class contains text or int})
+      ->consumer
+        -> consumer is used to refuse from the rebuilt of all widgets
+         child :Consumer<themeProvider>(
+                builder: (context,themeProvider,child) {
+                 bool  a = themeprovider.getDarktheme;
+                  return MaterialApp(
+                  title: 'MultiStore App',
+                  theme: Styles.themeData(a, context),
+                  debugShowCheckedModeBanner: false,
+                  home: Btm_screeen(),
+            );
+                }
+              ),
+              consumer <classname to rebuild>
+                ->builder widget takes three parameters(context,themeprovider,child)
+                ->themeprovider is the dynamic value of class name
+                ->here we accessing the object declared with that name
+                ->we are assigning the values to var a of type bool
+                consumer can return the widget of MaterialApp
+      ->materialApp
+        ->it consists of title,theme,home etc
+        ->title is used to display on the multitask bar
+        ->home is used to display at the screen
+      ->themeData
+          ->const folder
+          ->ThemeData.dart
+            ->with class name styles
+            ->method is static which holds the single value
+            ->static ThemeData themeData(bool isDarkTheme,BuildContext context)
+                -> ThemeData is widget name which consits so many functions
+                ->build context is used for styling the buttons
+                ->this method will return themeData for the theme widget
+                    ->scaffoldBackgroundColor is used to set the background color of app
+                    ->primary color is used for appbar etc
+            -> this the complete code for the theme widget
+                ->import 'package:flutter/material.dart';
+                  class Styles{
+                    static ThemeData themeData(bool isDarkTheme,BuildContext context){
+                      return ThemeData(
+                        scaffoldBackgroundColor:
+                        //0A1931  // white yellow 0xFFFCF8EC
+                        isDarkTheme ? const Color(0xFF00001a) : const Color(0xFFFFFFFF),
+                        primaryColor: Colors.blue,
+                        colorScheme: ThemeData().colorScheme.copyWith(
+                          secondary:
+                          isDarkTheme ? const Color(0xFF1a1f3c) : const Color(0xFFE8FDFD),
+                          brightness: isDarkTheme ? Brightness.dark : Brightness.light,
+                        ),
+                        cardColor:
+                        isDarkTheme ? const Color(0xFF0a0d2c) : const Color(0xFFF2FDFD),
+                        canvasColor: isDarkTheme ? Colors.black : Colors.grey[50],
+                        buttonTheme: Theme.of(context).buttonTheme.copyWith(
+                            colorScheme: isDarkTheme
+                                ? const ColorScheme.dark()
+                                : const ColorScheme.light()),
+                      );
+                    }
+                  }
+            -> complete main method code
+                import 'package:flutter/material.dart';
+                import 'package:flutter_proj/Providers/Theme-provider.dart';
+                import 'package:flutter_proj/Screens/Home_screens.dart';
+                import 'package:flutter_proj/Screens/btm_screen.dart';
+                import 'package:flutter_proj/consts/ThemeData.dart';
+                import 'package:flutter_proj/services/darktheme_preferences.dart';
+                import 'package:provider/provider.dart';
+                void main() {
+                  runApp( MyApp());
+                }
+
+                class MyApp extends StatefulWidget {
+                   MyApp({Key? key}) : super(key: key);
+
+                  @override
+                  State<MyApp> createState() => _MyAppState();
+                }
+
+                class _MyAppState extends State<MyApp> {
+                  themeProvider themeprovider = themeProvider();
+
+                  void gettheme() async{
+                    themeprovider.setDarktheme = await themeprovider.pref.getTheme();
+                  }
+                @override
+                  void initState() {
+                    // TODO: implement initState
+                  gettheme();
+                    super.initState();
+                  }
+                  @override
+                  Widget build(BuildContext context) {
+                    return MultiProvider(
+                      providers: [
+                        ChangeNotifierProvider(create: (_){
+                          return themeprovider;
+                        })
+                      ],
+                      child :Consumer<themeProvider>(
+                        builder: (context,themeProvider,child) {
+                         bool  a = themeprovider.getDarktheme;
+                          return MaterialApp(
+                          title: 'MultiStore App',
+                          theme: Styles.themeData(a, context),
+                          debugShowCheckedModeBanner: false,
+                          home: Btm_screeen(),
+                    );
+                        }
+                      ),
+                    );
+                  }
+                }
+
+    ->from this is displaying the bottom navigation bar
+        -> it is easy to develop the bottom navigation bar
+            ->first we set Btm_index = 0 of type int
