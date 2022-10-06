@@ -1,0 +1,61 @@
+ -> at first we use the scaffold widget to provide basic implementation
+        ->like Appbar ,body and etc
+        ->we use SingleChildScroll to overcome the scroll
+    ->we use column widget to place all the tiles in the in column
+        -> mainAxisAlignment: MainAxisAlignment.center,
+            -> mainAxisAlignment is used to align the column in the widget
+        ->column wiget contains the children list
+        -> we create the _list private method to display the ListTile
+    -> here code
+        ->    final theme = Provider.of<themeProvider>(context);
+              final Color color = theme.getDarktheme ? Colors.white: Colors.black;
+              return Scaffold(
+                body: SingleChildScrollView( //used for the scroll view
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center, //centering the element inside the column widget
+                    children:  [
+                          _listTiles(title: "Address", icon: IconlyLight.profile, onPressed: (){},subtile: "address",color:color,),
+                          _listTiles(title: "Orders", icon: IconlyLight.bag, onPressed: (){},color:color,),
+                          _listTiles(title: "Whislist", icon: IconlyLight.heart, onPressed: (){},color:color,),
+                          _listTiles(title: "Viewed", icon: IconlyLight.show, onPressed: (){},color:color,),
+                      SwitchListTile(onChanged: (bool value){
+                        theme.setDarktheme = value;
+                      },
+                        value: theme.getDarktheme,
+                        title : Text("Theme"),
+                        secondary: Icon(theme.getDarktheme ?Icons.dark_mode_outlined :Icons.light_mode_outlined),
+                      ),
+                          _listTiles(title: "Forgot password", icon: IconlyLight.unlock, onPressed: (){},color:color,),
+                          _listTiles(title: "Logout", icon: IconlyLight.logout, onPressed: (){},color:color,),
+                    ],
+                  ),
+                ),
+              );
+            }
+            Widget _listTiles({required String title,String? subtile,required IconData icon,required Function onPressed,required color }){
+              return ListTile(
+                title: TextWidget(title: title,color: color,fontweight: 21,istitle: false,),
+                subtitle: TextWidget(title: subtile == null ? "":subtile,color: color,fontweight: 21,istitle: false,),
+                leading: Icon(icon),
+                trailing: Icon(IconlyLight.arrowRight2),
+                onTap: onPressed(),
+              );
+            }
+          ->widgets
+                ->Textwidget
+                here the text widget is used to show the text dynamically
+                    ->overflow property in the style of text widget
+                        -> overflow.elipse is used
+                            -> when the text is fit in the screen it uses (....)
+                -> here is the code
+                      TextWidget({Key? key,required this.title,required this.color,required this.fontweight,this.istitle = false, this.maxlines = 10}) : super(key: key);
+                      final String title;
+                      final Color color;
+                      final double fontweight;
+                      bool istitle = false;
+                      int maxlines = 10;
+                      @override
+                      Widget build(BuildContext context) {
+
+                        return Text(title,style: TextStyle(color: color,fontSize: fontweight,fontWeight:istitle? FontWeight.bold: FontWeight.normal),);
+                      }

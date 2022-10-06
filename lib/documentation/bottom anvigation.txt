@@ -1,0 +1,25 @@
+ -> this feild is the widget of the scaffold widget
+        body : widget displays the current page in the display
+ ->from this is displaying the bottom navigation bar
+        -> it is easy to develop the bottom navigation bar
+            ->first we set Btm_index = 0 of type int
+        -> bottom navigation bars contains the default widget from the flutter
+            ->bottomNavigationBar : BottomNavigationBar
+                ->bottomNavigationBar is the type of the BottomNavigation
+                ->BottomNavigationBar contains the serval methods
+        ->here is the code below for example
+            ->backgroundColor: state ? Theme.of(context).canvasColor: Colors.white,
+                      type: BottomNavigationBarType.fixed,//doesnot moves top and bottom
+                      showSelectedLabels: false, //this hides the name from the selected tab
+                      showUnselectedLabels: false, //this hides the name from the unselected tab
+                      selectedItemColor: state ? Colors.lightBlue.shade200: Colors.black87,
+                      unselectedItemColor: state ? Colors.white38: Colors.black38,
+                      currentIndex: _bottomIndex,
+                      onTap: _selectedPage,
+                      items: [
+                        BottomNavigationBarItem(icon: Icon(_bottomIndex == 0 ? IconlyBold.home:IconlyLight.home,),label: "Home"),
+                        BottomNavigationBarItem(icon: Icon(_bottomIndex == 1 ? IconlyBold.category:IconlyLight.category,),label: "Category"),
+                        BottomNavigationBarItem(icon: Icon(_bottomIndex == 2 ? IconlyBold.buy:IconlyLight.buy,),label: "Cart"),
+                        BottomNavigationBarItem(icon: Icon(_bottomIndex == 3 ? IconlyBold.user2:IconlyLight.user2,),label: "User"),
+                      ],
+        -> required feild is items

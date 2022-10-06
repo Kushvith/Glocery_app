@@ -245,8 +245,92 @@ first we store the theme perferences using the
     ->from this is displaying the bottom navigation bar
         -> it is easy to develop the bottom navigation bar
             ->first we set Btm_index = 0 of type int
+        -> bottom navigation bars contains the default widget from the flutter
+            ->bottomNavigationBar : BottomNavigationBar
+                ->bottomNavigationBar is the type of the BottomNavigation
+                ->BottomNavigationBar contains the serval methods
+        ->here is the code below for example
+            ->backgroundColor: state ? Theme.of(context).canvasColor: Colors.white,
+                      type: BottomNavigationBarType.fixed,//doesnot moves top and bottom
+                      showSelectedLabels: false, //this hides the name from the selected tab
+                      showUnselectedLabels: false, //this hides the name from the unselected tab
+                      selectedItemColor: state ? Colors.lightBlue.shade200: Colors.black87,
+                      unselectedItemColor: state ? Colors.white38: Colors.black38,
+                      currentIndex: _bottomIndex,
+                      onTap: _selectedPage,
+                      items: [
+                        BottomNavigationBarItem(icon: Icon(_bottomIndex == 0 ? IconlyBold.home:IconlyLight.home,),label: "Home"),
+                        BottomNavigationBarItem(icon: Icon(_bottomIndex == 1 ? IconlyBold.category:IconlyLight.category,),label: "Category"),
+                        BottomNavigationBarItem(icon: Icon(_bottomIndex == 2 ? IconlyBold.buy:IconlyLight.buy,),label: "Cart"),
+                        BottomNavigationBarItem(icon: Icon(_bottomIndex == 3 ? IconlyBold.user2:IconlyLight.user2,),label: "User"),
+                      ],
+        -> required feild is items
+    -> user page contains
+        ->address
+        ->orders
+        ->whislist
+        ->viewed
+        ->theme
+        ->forgot password
+        ->Logout
+    -> at first we use the scaffold widget to provide basic implementation
+        ->like Appbar ,body and etc
+        ->we use SingleChildScroll to overcome the scroll
+    ->we use column widget to place all the tiles in the in column
+        -> mainAxisAlignment: MainAxisAlignment.center,
+            -> mainAxisAlignment is used to align the column in the widget
+        ->column wiget contains the children list
+        -> we create the _list private method to display the ListTile
+    -> here code
+        ->    final theme = Provider.of<themeProvider>(context);
+              final Color color = theme.getDarktheme ? Colors.white: Colors.black;
+              return Scaffold(
+                body: SingleChildScrollView( //used for the scroll view
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center, //centering the element inside the column widget
+                    children:  [
+                          _listTiles(title: "Address", icon: IconlyLight.profile, onPressed: (){},subtile: "address",color:color,),
+                          _listTiles(title: "Orders", icon: IconlyLight.bag, onPressed: (){},color:color,),
+                          _listTiles(title: "Whislist", icon: IconlyLight.heart, onPressed: (){},color:color,),
+                          _listTiles(title: "Viewed", icon: IconlyLight.show, onPressed: (){},color:color,),
+                      SwitchListTile(onChanged: (bool value){
+                        theme.setDarktheme = value;
+                      },
+                        value: theme.getDarktheme,
+                        title : Text("Theme"),
+                        secondary: Icon(theme.getDarktheme ?Icons.dark_mode_outlined :Icons.light_mode_outlined),
+                      ),
+                          _listTiles(title: "Forgot password", icon: IconlyLight.unlock, onPressed: (){},color:color,),
+                          _listTiles(title: "Logout", icon: IconlyLight.logout, onPressed: (){},color:color,),
+                    ],
+                  ),
+                ),
+              );
+            }
+            Widget _listTiles({required String title,String? subtile,required IconData icon,required Function onPressed,required color }){
+              return ListTile(
+                title: TextWidget(title: title,color: color,fontweight: 21,istitle: false,),
+                subtitle: TextWidget(title: subtile == null ? "":subtile,color: color,fontweight: 21,istitle: false,),
+                leading: Icon(icon),
+                trailing: Icon(IconlyLight.arrowRight2),
+                onTap: onPressed(),
+              );
+            }
     ->widgets
         ->Textwidget
+        here the text widget is used to show the text dynamically
             ->overflow property in the style of text widget
                 -> overflow.elipse is used
                     -> when the text is fit in the screen it uses (....)
+        -> here is the code
+              TextWidget({Key? key,required this.title,required this.color,required this.fontweight,this.istitle = false, this.maxlines = 10}) : super(key: key);
+              final String title;
+              final Color color;
+              final double fontweight;
+              bool istitle = false;
+              int maxlines = 10;
+              @override
+              Widget build(BuildContext context) {
+
+                return Text(title,style: TextStyle(color: color,fontSize: fontweight,fontWeight:istitle? FontWeight.bold: FontWeight.normal),);
+              }

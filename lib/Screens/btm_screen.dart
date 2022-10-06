@@ -16,7 +16,7 @@ class Btm_screeen extends StatefulWidget {
 
 class _Btm_screeenState extends State<Btm_screeen> {
 
-  int _bottomIndex = 0;
+  int _bottomIndex = 3;
   final List  _page = [
     const HomeScreen(),
     const  CartScreen(),
