@@ -1,0 +1,17 @@
+ ->RotatedBox
+            ->rotated box is used to rotate the container to any direction
+            -> required parameters are :
+                ->quarterTurns: -1,
+                    -> the quarterTurns is used to rotate to any direction
+            ->code for the RotatedBox
+                   RotatedBox(
+                               quarterTurns: -1,
+                             child : Row(
+                               children: [
+                                  SizedBox(height: 5,),
+                                 TextWidget(title: "on sale", color: Colors.red, fontweight: 25),
+                                 SizedBox(width: 5,),
+                                 Icon(IconlyLight.discount)
+                               ],
+                             ),
+                             ),

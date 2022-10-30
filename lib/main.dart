@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_proj/Providers/Theme-provider.dart';
-import 'package:flutter_proj/Screens/Home_screens.dart';
 import 'package:flutter_proj/Screens/btm_screen.dart';
+import 'package:flutter_proj/Screens/orders/order_screen.dart';
+import 'package:flutter_proj/Screens/whislist/Whislist_screen.dart';
 import 'package:flutter_proj/consts/ThemeData.dart';
-import 'package:flutter_proj/services/darktheme_preferences.dart';
 import 'package:provider/provider.dart';
+
+import 'Inner Screens/FeedScreen.dart';
+import 'Inner Screens/OnSaleScreens.dart';
+import 'Inner Screens/product_details.dart';
 void main() {
   runApp( MyApp());
 }
@@ -44,6 +48,15 @@ class _MyAppState extends State<MyApp> {
           theme: Styles.themeData(a, context),
           debugShowCheckedModeBanner: false,
           home: Btm_screeen(),
+            routes: {
+              OnsaleScreen.routeName : (context) => OnsaleScreen(),
+              FeedScreen.routeName : (context) => FeedScreen(),
+              ProductDetails.routeName : (context) => ProductDetails(),
+              Whislist.routeName : (context) => Whislist(),
+              OrderScreen.routeName : (context) => OrderScreen(),
+
+
+            },
     );
         }
       ),

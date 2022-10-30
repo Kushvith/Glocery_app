@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_proj/Providers/Theme-provider.dart';
+import 'package:flutter_proj/Screens/orders/order_screen.dart';
+import 'package:flutter_proj/Screens/whislist/Whislist_screen.dart';
+import 'package:flutter_proj/services/GobalVariables.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
 import 'package:provider/provider.dart';
 
@@ -74,55 +78,64 @@ class _userScreenState extends State<userScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                ListTile(
-                  title: TextWidget(
-                    title: "Address",
-                    fontweight: 21,
-                    color: color,
-                    istitle: false,
-                  ),
-                  leading: Icon(IconlyLight.profile),
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                              title: Text("update"),
-                              content: TextField(
-                                onChanged: (value){
-                                  // adressController.text;
-                                },
-                                controller: adressController,
-                                decoration: InputDecoration(
-                                  hintText: "Your address",
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text("h,mm"))
-                              ],
-                            ));
-                  },
-                  subtitle: TextWidget(
-                    title: "Your address",
-                    color: color,
-                    fontweight: 15,
-                    istitle: false,
-                  ),
-                  trailing: Icon(IconlyLight.arrowRight2),
-                ),
+               // ListTile(
+               //    title: TextWidget(
+               //      title: "Address",
+               //      fontweight: 21,
+               //      color: color,
+               //      istitle: false,
+               //    ),
+               //    leading: Icon(IconlyLight.profile),
+               //    onTap: () {
+               //      showDialog(
+               //          context: context,
+               //          builder: (ctx) => AlertDialog(
+               //                title: Text("update"),
+               //                content: TextField(
+               //                  onChanged: (value){
+               //                    // adressController.text;
+               //                  },
+               //                  controller: adressController,
+               //                  decoration: InputDecoration(
+               //                    hintText: "Your address",
+               //                  ),
+               //                ),
+               //                actions: [
+               //                  TextButton(
+               //                      onPressed: () {
+               //                        Navigator.of(context).pop();
+               //                      },
+               //                      child: Text("h,mm"))
+               //                ],
+               //              ));
+               //    },
+               //    subtitle: TextWidget(
+               //      title: "Your address",
+               //      color: color,
+               //      fontweight: 15,
+               //      istitle: false,
+               //    ),
+               //    trailing: Icon(IconlyLight.arrowRight2),
+               //  ),
+
+                _listTiles(title: "Address", icon: IconlyLight.profile, onPressed: ()async{
+                  await _addressModel();
+                },subtile: "Your address"
+        ,color: color),
                 _listTiles(
                   title: "Orders",
                   icon: IconlyLight.bag,
-                  onPressed: () {},
+                  onPressed: () {
+                    GlobalVariable.routeTo(context: context, routeName: OrderScreen.routeName);
+                  },
                   color: color,
                 ),
                 _listTiles(
                   title: "Whislist",
                   icon: IconlyLight.heart,
-                  onPressed: () {},
+                  onPressed: () {
+                    GlobalVariable.routeTo(context: context, routeName: Whislist.routeName);
+                  },
                   color: color,
                 ),
                 _listTiles(
@@ -155,7 +168,9 @@ class _userScreenState extends State<userScreen> {
                 _listTiles(
                   title: "Logout",
                   icon: IconlyLight.logout,
-                  onPressed: () {},
+                  onPressed: () async {
+                    await GlobalVariable.waringDailog(title: "Sign out", subtitle: "Do you wana Logout", fn: (){}, context: context);
+                  },
                   color: color,
                 ),
                 // ListTile(title: Text("testing"),onTap: (){
@@ -202,7 +217,34 @@ class _userScreenState extends State<userScreen> {
       ),
       leading: Icon(icon),
       trailing: Icon(IconlyLight.arrowRight2),
-      onTap: onPressed(),
+      onTap:(){onPressed();} ,
     );
   }
+  Future <void> _addressModel() async{
+    await
+      showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text("update"),
+            content: TextField(
+              onChanged: (value){
+                // adressController.text;
+              },
+              controller: adressController,
+              decoration: InputDecoration(
+                hintText: "Your address",
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Update"))
+            ],
+          )
+      );
+    }
+
+
 }

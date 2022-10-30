@@ -313,7 +313,7 @@ first we store the theme perferences using the
                 subtitle: TextWidget(title: subtile == null ? "":subtile,color: color,fontweight: 21,istitle: false,),
                 leading: Icon(icon),
                 trailing: Icon(IconlyLight.arrowRight2),
-                onTap: onPressed(),
+                onTap: (){onPressed()},//this important because it can return void
               );
             }
     ->widgets
@@ -334,3 +334,304 @@ first we store the theme perferences using the
 
                 return Text(title,style: TextStyle(color: color,fontSize: fontweight,fontWeight:istitle? FontWeight.bold: FontWeight.normal),);
               }
+    -> Dialogbox
+        ->  to display dialog box we required two methods showDailog and AlertDailog which is the return type of future void
+        ->showDailog has two important methods
+            ->context , builder
+            ->builder takes some parameters to context as the arguments and return AlertDailog
+            ->AlertDailog consists of
+                -> title <widget>: to display the title in the Dialog
+                ->content <widget>: to display the conent of the dialog
+                -> action : is used add the buttons to the dialog
+            -> below example shows that logout dialog and which is called from ListTile
+            ->here is the code for that
+                 Future <void> _LogoutModel() async{
+                    await showDialog(context: context, builder: (context)=>
+                      AlertDialog(
+                        title: Row(
+                          children: [
+                            Image.asset("assets/images/warning-sign.png",width: 20,height: 20,),
+                            SizedBox(width: 5,),
+                            Text("Sign out")
+                          ],
+                        ),
+                        content: Text("Do you want to logout"),
+                        actions: [
+                          TextButton(onPressed: (){
+                            if(Navigator.canPop(context))
+                              Navigator.pop(context);
+                          }, child: TextWidget(
+                            title: "cancel",
+                            color: Colors.cyan,
+                            fontweight: 15,
+                          )),
+                          TextButton(onPressed: (){}, child: TextWidget(
+                            title: "logout",
+                            color: Colors.red,
+                            fontweight: 15,
+                          ))
+                        ],
+                    )
+                    );
+                  }
+    -> grid view for the category Screen
+        ->GridView.count is the widget used to display
+            ->gridView has the three properties
+                ->crossAxisCount this used to display the no of items in the row
+                ->childAsceptRatio is used to width and height of item
+                ->crossAxisSpacing is used for vertical spacing
+                ->mainAxisSpacing is used for horizontal spacing
+                ->children is the list of items
+                -> here we dynamically generate the list of items using arrays
+        ->code for GridView
+               child: GridView.count(crossAxisCount: 2,
+                        childAspectRatio: (w/(h/1.8)),
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          children: List.generate(6, (index){
+                            return CategoryWidget(
+                              catname: CatInfo[index]['CatNam'],
+                              passedColor: colors[index],
+                              path: CatInfo[index]['Path'],
+                            );
+                          }),
+                        ),
+        -> code for array list CatInfo
+               List<Color> colors = [
+                 Color(0x35EA0CD4),
+                 Color(0xA41BDEFF),
+                 Color(0xA4DE610E),
+                 Color(0xA413FF0C),
+                 Color(0xA4D7CE25),
+                 Color(0xA4B8041F),
+
+               ];
+              List <Map<String,dynamic>> CatInfo =  [
+                {
+                  "CatNam" : "fruits","Path":"assets/images/cat/fruits.png"
+                },
+                {
+                  "CatNam" : "Vegtables","Path":"assets/images/cat/veg.png"
+                },
+                {
+                  "CatNam" : "Herbs","Path":"assets/images/cat/Spinach.png"
+                },
+                {
+                  "CatNam" : "Species","Path":"assets/images/cat/spices.png"
+                },
+                {
+                  "CatNam" : "Grains","Path":"assets/images/cat/grains.png"
+                },
+                {
+                  "CatNam" : "Nuts","Path":"assets/images/cat/nuts.png"
+                }
+              ];
+    -> code for category wiget used to generate the items
+    constructor for category widget
+        CategoryWidget({Key? key,required this.catname,required this.path,required this.passedColor}) : super(key: key);
+          final String catname,path;
+          final Color passedColor;
+        InkWell(
+              onTap: (){
+                print("container pressed");
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: passedColor.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: passedColor.withOpacity(0.5),width: 2),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      height: h*0.3,
+                      width: h*0.3,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(path),
+                          fit: BoxFit.fill
+                        )
+                      ),
+                    ),
+                    TextWidget(title: catname, color: color, fontweight: 20,istitle: true,)
+                  ],
+                ),
+              ),
+            );
+           ->  here container is used to generate image and title for the text
+        -> InkWell is the property used to navigate to other pages in the category section
+            -> its as on tap method to navigate to other widget
+        ->swiper
+            -> swiper is used to swipe the images using the pagination
+            -> swiper library should be downloaded from the pub.dev
+            ->import 'package:card_swiper/card_swiper.dart';
+            -> card_swiper: ^2.0.4 should be added to the pubspec.yaml
+            -> configuaration is easy code as follows
+                 Container(
+                            height: size.height * 0.3,
+                            child: Swiper(
+                              itemBuilder: (BuildContext context, int index) {
+                                return Image.asset(
+                                  _OfferImages[index],
+                                  fit: BoxFit.fill,
+                                );
+                              },
+                              itemCount: _OfferImages.length,
+                              autoplay: true,
+                              pagination: SwiperPagination(
+                                  alignment: Alignment.bottomCenter,
+                                  builder: DotSwiperPaginationBuilder(
+                                      color: Colors.white, activeColor: Colors.orangeAccent)),
+                              // control: SwiperControl(),
+                            ),
+                          ),
+        ->RotatedBox
+            ->rotated box is used to rotate the container to any direction
+            -> required parameters are :
+                ->quarterTurns: -1,
+                    -> the quarterTurns is used to rotate to any direction
+            ->code for the RotatedBox
+                   RotatedBox(
+                               quarterTurns: -1,
+                             child : Row(
+                               children: [
+                                  SizedBox(height: 5,),
+                                 TextWidget(title: "on sale", color: Colors.red, fontweight: 25),
+                                 SizedBox(width: 5,),
+                                 Icon(IconlyLight.discount)
+                               ],
+                             ),
+                             ),
+        ->flexible
+            -> it makes the child widget flexible in the tree
+            ->  Flexible(
+                       child: Container(
+                       height: size.height*0.3,
+                       child: ListView.builder(
+                         itemCount: 10,
+                           scrollDirection: Axis.horizontal,
+                           itemBuilder: (ctx,index){
+                             return OnSaleWidget();
+                           }),
+                             ),
+                           ),
+        ->ListView.builder
+            -> ListView.builder is used to produce the number of cards in the screen
+            ->required parameters are :
+                ->itemCount: int
+                ScrollDirection : Axis.direction
+                itemBuilder: (context)=> widget
+
+            -> code for the ListView.builder
+                     child: ListView.builder(
+                             itemCount: 10,
+                               scrollDirection: Axis.horizontal,
+                               itemBuilder: (ctx,index){
+                                 return OnSaleWidget();
+                               }),
+        ->on sale widget design
+            -> widget first has the column
+                ->first child is the row
+                    -> row
+                        -> the consists of image and column widget
+                            >in the first column child is Text widget
+                            ->second column widget is the row
+                                -> its consists of icons and spacing between them
+                -> second column widget consists of row to display the price
+                    -> textWidget to show original price
+                    ->Text to show the actual price
+                -> third column to display the product title
+            -> code as follows:
+        ->Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Material(
+                  borderRadius: BorderRadius.circular(12),
+                  child: InkWell(
+                    onTap: (){},
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+
+                                  FancyShimmerImage(
+                                    imageUrl: 'https://media.istockphoto.com/photos/red-apple-picture-id184276818?k=20&m=184276818&s=612x612&w=0&h=QxOcueqAUVTdiJ7DVoCu-BkNCIuwliPEgtAQhgvBA_g=',
+                                    height: size.height *0.2,width: size.width*0.25,boxFit: BoxFit.fill,
+                                  ),
+
+
+                              Column(
+
+                                children: [
+                                  SizedBox(height: 10,),
+                                  TextWidget(title: "1 KG", color: Colors.green, fontweight: 22,istitle: true,),
+                                  SizedBox(height: 5,),
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: (){},
+                                        child: Icon(IconlyLight.bag2,size: 22,),
+
+                                      ),
+                                      SizedBox(width: 5,),
+                                      GestureDetector(
+                                        onTap: (){},
+                                        child: Icon(IconlyLight.heart,size: 22,),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          PriceWidget(),
+                          SizedBox(height: 2,),
+                          TextWidget(title: "Product title", color: color, fontweight: 16)
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+        -> FancyShimmer image
+         -> this is used to preload the image before the image is loaded from the network
+         -> package name :import 'package:fancy_shimmer_image/fanc y_shimmer_image.dart';
+          -> dependences :   fancy_shimmer_image: ^2.0.2
+          -> code as follows
+            FancyShimmerImage(
+                    imageUrl: 'https://media.istockphoto.com/photos/red-apple-picture-id184276818?k=20&m=184276818&s=612x612&w=0&h=QxOcueqAUVTdiJ7DVoCu-BkNCIuwliPEgtAQhgvBA_g=',
+                    height: size.height *0.2,width: size.width*0.25,boxFit: BoxFit.fill,
+                  ),
+
+       -> routing to other pages using the InkWell method
+            -> first we need to define static keyword for the varible
+                -> static varible need not want the intialization
+                -> it can be directly accesed using ClassName.variable/ fuction
+                ->code for this
+                     static  const routeName = '/OnsaleScreen';
+            -> we simply intialise the routename = '/classname' as a constant
+         -> we need to declare the routes in the materialApp in the main.dart file
+            routes is the dictoinory that maps string to widgets
+                   -> code for this
+                             routes: {
+                                 OnsaleScreen.routeName : (context) => OnsaleScreen(),
+                                     },
+         ->   for routing to next page we have Inkwell consists of method
+                    onTap: (){
+                           Navigator.PushedName(context,className.routeName//const variable in class);
+                    }
+                    code for this
+                        TextButton(onPressed: (){
+                                      GlobalVariable.routeTo(context: context, routeName: OnsaleScreen.routeName);
+                                    }, child: Text("View All",style: TextStyle(fontSize: 20,color: Colors.blue),)),
+          -> we created the global variable to route the pages dynamically for code reuseability
+                ->static routeTo({required BuildContext context,required String routeName}){
+                      Navigator.pushNamed(context, routeName);
+                    }
+                -> note: here the static keyword to access the method without intialiaing
+                    eg: className.method/variable;

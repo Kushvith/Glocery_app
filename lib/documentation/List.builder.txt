@@ -1,0 +1,14 @@
+ ->ListView.builder
+            -> ListView.builder is used to produce the number of cards in the screen
+            ->required parameters are :
+                ->itemCount: int
+                ScrollDirection : Axis.direction
+                itemBuilder: (context)=> widget
+
+            -> code for the ListView.builder
+                     child: ListView.builder(
+                             itemCount: 10,
+                               scrollDirection: Axis.horizontal,
+                               itemBuilder: (ctx,index){
+                                 return OnSaleWidget();
+                               }),

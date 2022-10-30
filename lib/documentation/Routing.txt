@@ -1,0 +1,27 @@
+      -> routing to other pages using the InkWell method
+            -> first we need to define static keyword for the varible
+                -> static varible need not want the intialization
+                -> it can be directly accesed using ClassName.variable/ fuction
+                ->code for this
+                     static  const routeName = '/OnsaleScreen';
+            -> we simply intialise the routename = '/classname' as a constant
+         -> we need to declare the routes in the materialApp in the main.dart file
+            routes is the dictoinory that maps string to widgets
+                   -> code for this
+                             routes: {
+                                 OnsaleScreen.routeName : (context) => OnsaleScreen(),
+                                     },
+         ->   for routing to next page we have Inkwell consists of method
+                    onTap: (){
+                           Navigator.PushedName(context,className.routeName//const variable in class);
+                    }
+                    code for this
+                        TextButton(onPressed: (){
+                                      GlobalVariable.routeTo(context: context, routeName: OnsaleScreen.routeName);
+                                    }, child: Text("View All",style: TextStyle(fontSize: 20,color: Colors.blue),)),
+          -> we created the global variable to route the pages dynamically for code reuseability
+                ->static routeTo({required BuildContext context,required String routeName}){
+                      Navigator.pushNamed(context, routeName);
+                    }
+                -> note: here the static keyword to access the method without intialiaing
+                    eg: className.method/variable;

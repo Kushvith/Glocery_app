@@ -1,0 +1,7 @@
+-> InkWell is the property used to navigate to other pages in the category section
+   -> its as on tap method to navigate to other widget
+        InkWell(
+                      onTap: (){
+                        print("container pressed");
+                      },
+               );

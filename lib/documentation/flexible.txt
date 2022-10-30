@@ -1,0 +1,13 @@
+   ->flexible
+            -> it makes the child widget flexible in the tree
+            ->  Flexible(
+                       child: Container(
+                       height: size.height*0.3,
+                       child: ListView.builder(
+                         itemCount: 10,
+                           scrollDirection: Axis.horizontal,
+                           itemBuilder: (ctx,index){
+                             return OnSaleWidget();
+                           }),
+                             ),
+                           ),

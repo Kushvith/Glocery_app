@@ -1,0 +1,84 @@
+    -> grid view for the category Screen
+        ->GridView.count is the widget used to display
+            ->gridView has the three properties
+                ->crossAxisCount this used to display the no of items in the row
+                ->childAsceptRatio is used to width and height of item
+                ->crossAxisSpacing is used for vertical spacing
+                ->mainAxisSpacing is used for horizontal spacing
+                ->children is the list of items
+                -> here we dynamically generate the list of items using arrays
+        ->code for GridView
+               child: GridView.count(crossAxisCount: 2,
+                        childAspectRatio: (w/(h/1.8)),
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          children: List.generate(6, (index){
+                            return CategoryWidget(
+                              catname: CatInfo[index]['CatNam'],
+                              passedColor: colors[index],
+                              path: CatInfo[index]['Path'],
+                            );
+                          }),
+                        ),
+        -> code for array list CatInfo
+               List<Color> colors = [
+                 Color(0x35EA0CD4),
+                 Color(0xA41BDEFF),
+                 Color(0xA4DE610E),
+                 Color(0xA413FF0C),
+                 Color(0xA4D7CE25),
+                 Color(0xA4B8041F),
+
+               ];
+              List <Map<String,dynamic>> CatInfo =  [
+                {
+                  "CatNam" : "fruits","Path":"assets/images/cat/fruits.png"
+                },
+                {
+                  "CatNam" : "Vegtables","Path":"assets/images/cat/veg.png"
+                },
+                {
+                  "CatNam" : "Herbs","Path":"assets/images/cat/Spinach.png"
+                },
+                {
+                  "CatNam" : "Species","Path":"assets/images/cat/spices.png"
+                },
+                {
+                  "CatNam" : "Grains","Path":"assets/images/cat/grains.png"
+                },
+                {
+                  "CatNam" : "Nuts","Path":"assets/images/cat/nuts.png"
+                }
+              ];
+    -> code for category wiget used to generate the items
+    constructor for category widget
+        CategoryWidget({Key? key,required this.catname,required this.path,required this.passedColor}) : super(key: key);
+          final String catname,path;
+          final Color passedColor;
+        InkWell(
+              onTap: (){
+                print("container pressed");
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: passedColor.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: passedColor.withOpacity(0.5),width: 2),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      height: h*0.3,
+                      width: h*0.3,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(path),
+                          fit: BoxFit.fill
+                        )
+                      ),
+                    ),
+                    TextWidget(title: catname, color: color, fontweight: 20,istitle: true,)
+                  ],
+                ),
+              ),
+            );

@@ -1,0 +1,40 @@
+ -> Dialogbox
+        ->  to display dialog box we required two methods showDailog and AlertDailog which is the return type of future void
+        ->showDailog has two important methods
+            ->context , builder
+            ->builder takes some parameters to context as the arguments and return AlertDailog
+            ->AlertDailog consists of
+                -> title <widget>: to display the title in the Dialog
+                ->content <widget>: to display the conent of the dialog
+                -> action : is used add the buttons to the dialog
+            -> below example shows that logout dialog and which is called from ListTile
+            ->here is the code for that
+                 Future <void> _LogoutModel() async{
+                    await showDialog(context: context, builder: (context)=>
+                      AlertDialog(
+                        title: Row(
+                          children: [
+                            Image.asset("assets/images/warning-sign.png",width: 20,height: 20,),
+                            SizedBox(width: 5,),
+                            Text("Sign out")
+                          ],
+                        ),
+                        content: Text("Do you want to logout"),
+                        actions: [
+                          TextButton(onPressed: (){
+                            if(Navigator.canPop(context))
+                              Navigator.pop(context);
+                          }, child: TextWidget(
+                            title: "cancel",
+                            color: Colors.cyan,
+                            fontweight: 15,
+                          )),
+                          TextButton(onPressed: (){}, child: TextWidget(
+                            title: "logout",
+                            color: Colors.red,
+                            fontweight: 15,
+                          ))
+                        ],
+                    )
+                    );
+                  }
