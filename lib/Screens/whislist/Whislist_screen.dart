@@ -3,16 +3,19 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_proj/Screens/whislist/Whislist_widget.dart';
 import 'package:flutter_proj/services/GobalVariables.dart';
 import 'package:flutter_proj/services/Utils.dart';
+import 'package:flutter_proj/services/empty_screen.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
 
 class Whislist extends StatelessWidget {
   const Whislist({Key? key}) : super(key: key);
-  static const routeName = '/ProductDetails';
+  static const routeName = '/Whislist';
   @override
   Widget build(BuildContext context) {
     Size size = Utils(context).Getsize;
     Color color = Utils(context).color;
-    return Scaffold(
+    bool _isempty = true;
+    return _isempty ? EmptyScreen(maintitle: "whislist",imagepath: "assets/images/wishlist.png", title: "Empty whislist", subtitle: "add items to whislist", ButtonText: "Browse items")
+        :Scaffold(
       appBar: AppBar(
         leading: InkWell(
           onTap: (){

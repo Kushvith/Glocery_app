@@ -6,6 +6,7 @@ import 'package:flutter_proj/Screens/cart/cart_screen.dart';
 import 'package:flutter_proj/Screens/categories_screen.dart';
 import 'package:flutter_proj/Screens/user_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:badges/badges.dart' as badges;
 
 class Btm_screeen extends StatefulWidget {
   const Btm_screeen({Key? key}) : super(key: key);
@@ -55,9 +56,15 @@ class _Btm_screeenState extends State<Btm_screeen> {
               ),
               label: "Category"),
           BottomNavigationBarItem(
-              icon: Icon(
-                _bottomIndex == 2 ? IconlyBold.buy : IconlyLight.buy,
-              ),
+              icon:FittedBox( child: badges.Badge(
+                badgeColor: Colors.blue,
+                padding: EdgeInsets.all(5),
+                badgeContent: Text('1'),
+                elevation: 0,
+                child: Icon(
+                  _bottomIndex == 2 ? IconlyBold.buy : IconlyLight.buy,
+                ),
+              ),),
               label: "Cart"),
           BottomNavigationBarItem(
               icon: Icon(

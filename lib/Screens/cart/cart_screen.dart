@@ -3,6 +3,7 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_proj/Screens/cart/cartWidget.dart';
 import 'package:flutter_proj/services/GobalVariables.dart';
 import 'package:flutter_proj/services/Utils.dart';
+import 'package:flutter_proj/services/empty_screen.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
 class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -11,7 +12,8 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = Utils(context).Getsize;
     Color color = Utils(context).color;
-    return Scaffold(
+    bool _isempty = true;
+    return _isempty  ? EmptyScreen(imagepath: "assets/images/cart.png", title: "empty cart", subtitle: "Add items to cart", ButtonText: "browse items", maintitle: "cart"): Scaffold(
       appBar: AppBar(
         elevation: 1,
         title: TextWidget(title: "Cart( 2 )",color: color, fontweight: 20,istitle: true,maxlines: 1,),

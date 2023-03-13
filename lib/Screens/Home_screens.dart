@@ -6,6 +6,7 @@ import 'package:flutter_proj/Inner%20Screens/OnSaleScreens.dart';
 import 'package:flutter_proj/Providers/Theme-provider.dart';
 import 'package:flutter_proj/services/GobalVariables.dart';
 import 'package:flutter_proj/services/Utils.dart';
+import 'package:flutter_proj/consts/contss.dart';
 import 'package:flutter_proj/widgets/feed_items.dart';
 import 'package:flutter_proj/widgets/on_sale_widget.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
@@ -16,12 +17,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> _OfferImages = [
-      "assets/images/offres/Offer1.jpg",
-      "assets/images/offres/Offer2.jpg",
-      "assets/images/offres/Offer3.jpg",
-      "assets/images/offres/Offer4.jpg"
-    ];
+
     final theme = Provider.of<themeProvider>(context);
     Size size = Utils(context).Getsize;
     Color color = Utils(context).color;
@@ -33,12 +29,13 @@ class HomeScreen extends StatelessWidget {
               height: size.height * 0.3,
               child: Swiper(
                 itemBuilder: (BuildContext context, int index) {
+
                   return Image.asset(
-                    _OfferImages[index],
+                    constss.OfferImages[index],
                     fit: BoxFit.fill,
                   );
                 },
-                itemCount: _OfferImages.length,
+                itemCount: constss.OfferImages.length,
                 autoplay: true,
                 pagination: SwiperPagination(
                     alignment: Alignment.bottomCenter,

@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_proj/Providers/Theme-provider.dart';
 import 'package:flutter_proj/Screens/orders/order_screen.dart';
+import 'package:flutter_proj/Screens/viewed/viewed_screen.dart';
 import 'package:flutter_proj/Screens/whislist/Whislist_screen.dart';
 import 'package:flutter_proj/services/GobalVariables.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
@@ -141,7 +142,9 @@ class _userScreenState extends State<userScreen> {
                 _listTiles(
                   title: "Viewed",
                   icon: IconlyLight.show,
-                  onPressed: () {},
+                  onPressed: () {
+                    GlobalVariable.routeTo(context: context, routeName: Viewed_screen.pathname);
+                  },
                   color: color,
                 ),
                 SwitchListTile(
@@ -248,3 +251,4 @@ class _userScreenState extends State<userScreen> {
 
 
 }
+
