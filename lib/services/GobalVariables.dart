@@ -36,7 +36,9 @@ class GlobalVariable{
                     fontweight: 15,
                   )),
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    fn();
+                    if (Navigator.canPop(context)) Navigator.pop(context);},
                   child: TextWidget(
                     title: "Ok",
                     color: Colors.red,

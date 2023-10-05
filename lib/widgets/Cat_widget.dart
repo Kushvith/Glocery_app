@@ -6,9 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_proj/Inner%20Screens/product_details.dart';
-import 'package:flutter_proj/Providers/cartProvider.dart';
-import 'package:flutter_proj/Screens/auth/login_page.dart';
-import 'package:flutter_proj/consts/firebaseconnection.dart';
+import 'package:flutter_proj/Providers/whislistProvider.dart';
 import 'package:flutter_proj/models/productModel.dart';
 import 'package:flutter_proj/services/GobalVariables.dart';
 import 'package:flutter_proj/services/Utils.dart';
@@ -16,14 +14,18 @@ import 'package:flutter_proj/widgets/Heart_btn.dart';
 import 'package:flutter_proj/widgets/priceWidget.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
 import 'package:provider/provider.dart';
-class FeedItems extends StatefulWidget {
-  const FeedItems({Key? key}) : super(key: key);
+
+import '../Providers/cartProvider.dart';
+import '../Screens/auth/login_page.dart';
+import '../consts/firebaseconnection.dart';
+class CatWidget extends StatefulWidget {
+  const CatWidget({Key? key}) : super(key: key);
 
   @override
-  State<FeedItems> createState() => _FeedItemsState();
+  State<CatWidget> createState() => _CatWidgetState();
 }
 
-class _FeedItemsState extends State<FeedItems> {
+class _CatWidgetState extends State<CatWidget> {
   TextEditingController Kg_size = TextEditingController();
   @override
   void initState() {
@@ -40,10 +42,11 @@ class _FeedItemsState extends State<FeedItems> {
   @override
   Widget build(BuildContext context) {
     final productModel = Provider.of<ProductModel>(context);
-    final cartprovider = Provider.of<cartProvider>(context);
+    final cartprovier = Provider.of<cartProvider>(context);
+    final isInCart = cartprovier.getCartItems.containsKey(productModel.id);
+
     Color color = Utils(context).color;
     Size size = Utils(context).Getsize;
-    bool isInCart = cartprovider.getCartItems.containsKey(productModel.id);
     return Material(
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
@@ -61,22 +64,22 @@ class _FeedItemsState extends State<FeedItems> {
                 height: size.height *0.11,width: size.width*0.15,boxFit: BoxFit.fill,
               ),
               Padding(padding: EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
                     TextWidget(title: productModel.title, color: color, fontweight: 18),
                     HeartBTN(productId: productModel.id,),
-                ],
-              ),
+                  ],
+                ),
               ),
               Row(
                 children: [
-                    PriceWidget(
-                      textPrice: Kg_size.text !=  "" ? Kg_size.text :   '1' ,
-                      salePrice: productModel.salePrice,
-                      sale: productModel.price,
-                      isOnSale: productModel.isOnSale ,
-                    ),
+                  PriceWidget(
+                    textPrice: Kg_size.text !=  "" ? Kg_size.text :   '1' ,
+                    salePrice: productModel.salePrice,
+                    sale: productModel.price,
+                    isOnSale: productModel.isOnSale ,
+                  ),
                   SizedBox(width: 10,),
                   Flexible(
                     flex: 3,
@@ -85,41 +88,44 @@ class _FeedItemsState extends State<FeedItems> {
                   ),
                   SizedBox(width: 5,),
                   Flexible(child: TextFormField(
-                      controller: Kg_size,
-                      onChanged: (value){
-                        setState(() {
-                        });
-                      },
-                      key: ValueKey('10'),
-                      style: TextStyle(color: color,fontSize: 18),
-                      keyboardType: TextInputType.number,
-                      maxLines: 1,
-                      enabled: true,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
-                      ],
+                    controller: Kg_size,
+                    onChanged: (value){
+                      setState(() {
+                      });
+                    },
+                    key: ValueKey('10'),
+                    style: TextStyle(color: color,fontSize: 18),
+                    keyboardType: TextInputType.number,
+                    maxLines: 1,
+                    enabled: true,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
+                    ],
                   ))
                 ],
               ),
               Spacer(),
               Container(
                 width: double.infinity,
-                child: TextButton(onPressed: isInCart ?  null: (){
-                  final User? user = authInstance.currentUser;
-                  if(user == null){
-                    GlobalVariable.waringDailog(title: "Auth Error", subtitle: "Login to add to cart", fn: (){
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> LoginPage()) );
-                    }, context: context);
-                    return;
-                  }
-                  cartprovider.addProductToList(productId: productModel.id, quantity: int.parse(Kg_size.text));
-                },  child:
-                    TextWidget(title:isInCart? "In cart": "Add to cart",color: color,fontweight: 18,maxlines: 1,),
+                child: TextButton(onPressed:
+                  isInCart? null: (){
+                    final User? user = authInstance!.currentUser;
+                    if(user == null){
+                      GlobalVariable.waringDailog(title: "Auth Error", subtitle: "Login to add to cart", fn: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> LoginPage()));}, context: context);
+                      return;
+                    }
+                    else {
+                      cartprovier.addProductToList(
+                          productId: productModel.id,
+                          quantity: 1);
+                    }},
+              child:
+                TextWidget(title: "Add to cart",color: color,fontweight: 18,maxlines: 1,),
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).cardColor),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12),bottomRight: Radius.circular(12),),),
-                    )
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12),bottomRight: Radius.circular(12),),),
+                      )
                   ),
 
                 ),

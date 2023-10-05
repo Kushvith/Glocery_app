@@ -4,25 +4,28 @@ import 'package:flutter_proj/Providers/ProductProvider.dart';
 import 'package:flutter_proj/models/productModel.dart';
 
 import 'package:flutter_proj/services/Utils.dart';
+import 'package:flutter_proj/widgets/Cat_widget.dart';
 import 'package:flutter_proj/widgets/feed_items.dart';
-
+import 'package:flutter_proj/widgets/on_sale_widget.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
 import 'package:provider/provider.dart';
 
-class FeedScreen extends StatefulWidget {
-  const FeedScreen({Key? key}) : super(key: key);
+class CatScreen extends StatefulWidget {
+  const CatScreen({Key? key}) : super(key: key);
 
-  static  const routeName = '/FeedScreen';
+  static  const routeName = '/CatScreen';
 
   @override
-  State<FeedScreen> createState() => _FeedScreenState();
+  State<CatScreen> createState() => _CatScreenState();
 }
 
-class _FeedScreenState extends State<FeedScreen> {
+class _CatScreenState extends State<CatScreen> {
   @override
   Widget build(BuildContext context) {
     final productprovider = Provider.of<productProvider>(context);
-    List<ProductModel> getProducts = productprovider.getProduct;
+    final catname = ModalRoute.of(context)!.settings.arguments as String;
+    List<ProductModel> getProducts = productprovider.findCategoryName(catname);
+
     TextEditingController _searchController = TextEditingController();
     FocusNode _searchFocused = FocusNode();
     @override
@@ -32,7 +35,7 @@ class _FeedScreenState extends State<FeedScreen> {
       _searchFocused.dispose();
       super.dispose();
     }
-    bool _isEmpty = false;
+
     Size size = Utils(context).Getsize;
     Color color = Utils(context).color;
     return Scaffold(
@@ -58,31 +61,31 @@ class _FeedScreenState extends State<FeedScreen> {
                 focusNode: _searchFocused,
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Colors.green
-                    )
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                          color: Colors.green
+                      )
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                          color: Colors.green
-                      ),
-                  ),
-                    hintText: "what is there in your mind",
-                    prefixIcon: Icon(IconlyLight.search),
-                    suffix: IconButton(
-                      onPressed: (){
-                        _searchController.clear();
-                        _searchFocused.unfocus();
-                      },
-                      icon: Icon(Icons.close,color: Colors.red,),
+                    borderSide: BorderSide(
+                        color: Colors.green
                     ),
+                  ),
+                  hintText: "what is there in your mind",
+                  prefixIcon: Icon(IconlyLight.search),
+                  suffix: IconButton(
+                    onPressed: (){
+                      _searchController.clear();
+                      _searchFocused.unfocus();
+                    },
+                    icon: Icon(Icons.close,color: Colors.red,),
+                  ),
                 ),
               ),
             ),
           ),
-          _isEmpty ? Center(
+          getProducts.isEmpty ? Center(
             child: Column(
               mainAxisAlignment:  MainAxisAlignment.center,
               children: [
@@ -97,10 +100,10 @@ class _FeedScreenState extends State<FeedScreen> {
             child: GridView.count(crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              childAspectRatio: size.width/(size.height*0.65),
+              childAspectRatio: size.width/(size.height*0.45),
               children : List.generate(getProducts.length, (index) => ChangeNotifierProvider.value(
                 value: getProducts[index],
-                child: FeedItems(
+                child: CatWidget(
 
                 ),
               )),

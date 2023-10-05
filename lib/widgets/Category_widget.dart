@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_proj/Inner%20Screens/cartScreen.dart';
 import 'package:flutter_proj/Providers/Theme-provider.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ class CategoryWidget extends StatelessWidget {
     Color color = state ? Colors.white : Colors.black;
     return InkWell(
       onTap: () {
-        print("container pressed");
+        Navigator.pushNamed(context, CatScreen.routeName,arguments: catname);
       },
       child: Container(
         decoration: BoxDecoration(

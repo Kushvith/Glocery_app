@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:flutter_proj/Providers/cartProvider.dart';
 import 'package:flutter_proj/Screens/cart/cartWidget.dart';
 import 'package:flutter_proj/services/GobalVariables.dart';
 import 'package:flutter_proj/services/Utils.dart';
 import 'package:flutter_proj/services/empty_screen.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
+import 'package:provider/provider.dart';
 class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
 
@@ -12,17 +14,22 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = Utils(context).Getsize;
     Color color = Utils(context).color;
-    bool _isempty = true;
-    return _isempty  ? EmptyScreen(imagepath: "assets/images/cart.png", title: "empty cart", subtitle: "Add items to cart", ButtonText: "browse items", maintitle: "cart"): Scaffold(
+    final cartprovider = Provider.of<cartProvider>(context);
+    final cartValues = cartprovider.getCartItems.values.toList().reversed.toList();
+
+    return cartValues.isEmpty  ? EmptyScreen(imagepath: "assets/images/cart.png", title: "empty cart", subtitle: "Add items to cart", ButtonText: "browse items", maintitle: "cart"): Scaffold(
       appBar: AppBar(
         elevation: 1,
-        title: TextWidget(title: "Cart( 2 )",color: color, fontweight: 20,istitle: true,maxlines: 1,),
+        title: TextWidget(title: "Cart( ${cartValues.length } )",color: color, fontweight: 20,istitle: true,maxlines: 1,),
         actions: [
           Padding(padding: EdgeInsets.only(right: 15),
           child:  InkWell(
             borderRadius: BorderRadius.circular(10),
             onTap: () async{
-              await GlobalVariable.waringDailog(title: "Delete", subtitle: "Are you sure clear Cart", fn: (){}, context: context);
+              await GlobalVariable.waringDailog(title: "Delete", subtitle: "Are you sure clear Cart", fn: (){
+                cartprovider.clearCart();
+
+              }, context: context);
 
             },
             child: Icon(IconlyBroken.delete),
@@ -71,8 +78,10 @@ class CartScreen extends StatelessWidget {
               SizedBox(
                 height: size.height*0.7,
                 child: ListView.builder(
-                    itemCount: 15,
-                    itemBuilder: (context,index)=> cartWidget(),
+                    itemCount: cartValues.length,
+                    itemBuilder: (context,index)=> ChangeNotifierProvider.value(
+                        value: cartValues[index],
+                        child: cartWidget(q: cartValues[index].quantity,)),
                 ),
               ),
             ],

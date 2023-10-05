@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_proj/Inner%20Screens/FeedScreen.dart';
 import 'package:flutter_proj/Inner%20Screens/OnSaleScreens.dart';
+import 'package:flutter_proj/Providers/ProductProvider.dart';
 import 'package:flutter_proj/Providers/Theme-provider.dart';
+import 'package:flutter_proj/models/productModel.dart';
 import 'package:flutter_proj/services/GobalVariables.dart';
 import 'package:flutter_proj/services/Utils.dart';
 import 'package:flutter_proj/consts/contss.dart';
@@ -20,6 +22,9 @@ class HomeScreen extends StatelessWidget {
 
     final theme = Provider.of<themeProvider>(context);
     Size size = Utils(context).Getsize;
+    final productprovider = Provider.of<productProvider>(context);
+    List<ProductModel> getProducts = productprovider.getProduct;
+    List<ProductModel> getOnSale = productprovider.getOnSale;
     Color color = Utils(context).color;
     return Scaffold(
       body: SingleChildScrollView(
@@ -66,10 +71,12 @@ class HomeScreen extends StatelessWidget {
                  child: Container(
                    height: size.height*0.24,
                    child: ListView.builder(
-                     itemCount: 10,
+                     itemCount: getOnSale.length<10 ?getOnSale.length:10,
                        scrollDirection: Axis.horizontal,
                        itemBuilder: (ctx,index){
-                         return OnSaleWidget();
+                         return ChangeNotifierProvider.value(
+                             value: getOnSale[index],
+                             child: OnSaleWidget());
                        }),
                  ),
                ),
@@ -94,7 +101,13 @@ class HomeScreen extends StatelessWidget {
             childAspectRatio: size.width/(size.height*0.6),
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            children : List.generate(6, (index) => FeedItems()),
+            children : List.generate(getProducts.length < 4 ? getProducts.length: 4, (index) => ChangeNotifierProvider.value(
+              value: getProducts[index],
+              child: FeedItems(
+
+
+              ),
+            )),
             )
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_proj/Providers/Theme-provider.dart';
+import 'package:flutter_proj/Providers/cartProvider.dart';
 import 'package:flutter_proj/Screens/Home_screens.dart';
 import 'package:flutter_proj/Screens/cart/cart_screen.dart';
 import 'package:flutter_proj/Screens/categories_screen.dart';
@@ -15,7 +16,7 @@ class Btm_screeen extends StatefulWidget {
 }
 
 class _Btm_screeenState extends State<Btm_screeen> {
-  int _bottomIndex = 3;
+  int _bottomIndex = 0;
   final List _page = [
     const HomeScreen(),
     categoriesScreen(),
@@ -32,6 +33,7 @@ class _Btm_screeenState extends State<Btm_screeen> {
   Widget build(BuildContext context) {
     final themestate = Provider.of<themeProvider>(context);
     bool state = themestate.getDarktheme;
+    final cartprovider = Provider.of<cartProvider>(context);
     return Scaffold(
       body: _page[_bottomIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -56,15 +58,21 @@ class _Btm_screeenState extends State<Btm_screeen> {
               ),
               label: "Category"),
           BottomNavigationBarItem(
-              icon:FittedBox( child: badges.Badge(
-                badgeColor: Colors.blue,
-                padding: EdgeInsets.all(5),
-                badgeContent: Text('1'),
-                elevation: 0,
-                child: Icon(
-                  _bottomIndex == 2 ? IconlyBold.buy : IconlyLight.buy,
-                ),
-              ),),
+              icon:Consumer<cartProvider>(
+                builder: (_,mycart,ch) {
+                  return FittedBox(
+                  // child: Badge(
+                  //   // badgeColor: Colors.blue,
+                  //   padding: EdgeInsets.all(5),
+                  //   badgeContent: Text(mycart.getCartItems.length.toString()),
+                  //   // elevation: 0,
+                    child: Icon(
+                      _bottomIndex == 2 ? IconlyBold.buy : IconlyLight.buy,
+                    ),
+                  // ),
+                  );
+                }
+              ),
               label: "Cart"),
           BottomNavigationBarItem(
               icon: Icon(

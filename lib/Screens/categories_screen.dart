@@ -15,7 +15,7 @@ class categoriesScreen extends StatelessWidget {
   ];
   List<Map<String, dynamic>> CatInfo = [
     {"CatNam": "fruits", "Path": "assets/images/cat/fruits.png"},
-    {"CatNam": "Vegtables", "Path": "assets/images/cat/veg.png"},
+    {"CatNam": "Vegetables", "Path": "assets/images/cat/veg.png"},
     {"CatNam": "Herbs", "Path": "assets/images/cat/Spinach.png"},
     {"CatNam": "Species", "Path": "assets/images/cat/spices.png"},
     {"CatNam": "Grains", "Path": "assets/images/cat/grains.png"},

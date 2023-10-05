@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_proj/Inner%20Screens/product_details.dart';
+import 'package:flutter_proj/Providers/ProductProvider.dart';
+import 'package:flutter_proj/Providers/cartProvider.dart';
+import 'package:flutter_proj/models/cartModel.dart';
 import 'package:flutter_proj/services/GobalVariables.dart';
 import 'package:flutter_proj/services/Utils.dart';
 import 'package:flutter_proj/widgets/Heart_btn.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
+import 'package:provider/provider.dart';
 
 class cartWidget extends StatefulWidget {
-  const cartWidget({Key? key}) : super(key: key);
-
+  const cartWidget({Key? key,required  this.q}) : super(key: key);
+final int q;
   @override
   State<cartWidget> createState() => _cartWidgetState();
 }
@@ -20,7 +24,7 @@ class _cartWidgetState extends State<cartWidget> {
   TextEditingController _quantitiyValue = TextEditingController();
   @override
   void initState() {
-    _quantitiyValue.text = '1';
+    _quantitiyValue.text = widget.q.toString();
     // TODO: implement initState
     super.initState();
   }
@@ -32,13 +36,20 @@ class _cartWidgetState extends State<cartWidget> {
   }
   @override
   Widget build(BuildContext context) {
+  final productprovider = Provider.of<productProvider>(context);
+  final cartmodel = Provider.of<cartModel>(context);
+  final cartprovider = Provider.of<cartProvider>(context);
+  final productModel = productprovider.findById(cartmodel.prodid);
+  double usedPrice = productModel.isOnSale? productModel.salePrice : productModel.price;
 
     Size size = Utils(context).Getsize;
     Color color = Utils(context).color;
     return GestureDetector(
       onTap: (){
-        GlobalVariable.routeTo(context: context, routeName: ProductDetails.routeName);
+        // GlobalVariable.routeTo(context: context, routeName: ProductDetails.routeName);
+        Navigator.pushNamed(context, ProductDetails.routeName,arguments: productModel.id);
       },
+
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: Container(
@@ -60,7 +71,7 @@ class _cartWidgetState extends State<cartWidget> {
 
                     child:
                     FancyShimmerImage(
-                      imageUrl: 'https://media.istockphoto.com/photos/red-apple-picture-id184276818?k=20&m=184276818&s=612x612&w=0&h=QxOcueqAUVTdiJ7DVoCu-BkNCIuwliPEgtAQhgvBA_g=',
+                      imageUrl: productModel.imageUrl,
                     ),
                   ),
 
@@ -68,7 +79,7 @@ class _cartWidgetState extends State<cartWidget> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextWidget(title: "Title", color: color, fontweight: 20,istitle: true,),
+                  TextWidget(title: productModel.title, color: color, fontweight: 20,istitle: true,),
                   SizedBox(
                     width: size.width*0.4,
                     child: Padding(
@@ -80,6 +91,7 @@ class _cartWidgetState extends State<cartWidget> {
                                     return;
                                   }
                                   else{
+                                    cartprovider.ReduceQuantityByOne(productModel.id);
                                     _quantitiyValue.text = (int.parse(_quantitiyValue.text) - 1).toString();
                                   }
                               }),
@@ -101,6 +113,7 @@ class _cartWidgetState extends State<cartWidget> {
                             ),
                           ),
                           _quantityButton(color: Colors.green, icon: CupertinoIcons.plus ,fn: (){
+                            cartprovider.IncreaseQuantityByOne(productModel.id);
                             _quantitiyValue.text = (int.parse(_quantitiyValue.text) + 1).toString();
                           }),
 
@@ -116,14 +129,16 @@ class _cartWidgetState extends State<cartWidget> {
                 child: Column(
                   children: [
                     InkWell(
-                      onTap: (){},
+                      onTap: (){
+                        cartprovider.removeOneItem(productModel.id);
+                      },
                       child: Icon(CupertinoIcons.cart_badge_minus,color: Colors.red,size: 20,),
                     ),
                     SizedBox(height: 8,),
 
-                    HeartBTN(),
+                    HeartBTN(productId: productModel.id,),
                     SizedBox(height: 8,),
-                    TextWidget(title: "\$ 0.29", color: color, fontweight: 20,maxlines: 1,istitle: true,)
+                    TextWidget(title: "\$ ${usedPrice}", color: color, fontweight: 20,maxlines: 1,istitle: true,)
                   ],
                 ),
               )
