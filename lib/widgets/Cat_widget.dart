@@ -27,6 +27,7 @@ class CatWidget extends StatefulWidget {
 
 class _CatWidgetState extends State<CatWidget> {
   TextEditingController Kg_size = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -61,7 +62,7 @@ class _CatWidgetState extends State<CatWidget> {
             children: [
               FancyShimmerImage(
                 imageUrl: productModel.imageUrl,
-                height: size.height *0.11,width: size.width*0.15,boxFit: BoxFit.fill,
+                height: size.height *0.09,width: size.width*0.15,boxFit: BoxFit.fill,
               ),
               Padding(padding: EdgeInsets.all(10),
                 child: Row(
@@ -108,19 +109,20 @@ class _CatWidgetState extends State<CatWidget> {
               Container(
                 width: double.infinity,
                 child: TextButton(onPressed:
-                  isInCart? null: (){
+                  isInCart? null: () async {
                     final User? user = authInstance!.currentUser;
                     if(user == null){
                       GlobalVariable.waringDailog(title: "Auth Error", subtitle: "Login to add to cart", fn: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> LoginPage()));}, context: context);
                       return;
                     }
                     else {
-                      cartprovier.addProductToList(
+                    await  cartprovier.addToCart(
                           productId: productModel.id,
-                          quantity: 1);
+                          quantity: 1,context: context);
+                    await cartprovier.fetchCart();
                     }},
               child:
-                TextWidget(title: "Add to cart",color: color,fontweight: 18,maxlines: 1,),
+                TextWidget(title: isInCart ?"In cart":"Add to cart",color: color,fontweight: 18,maxlines: 1,),
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).cardColor),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(

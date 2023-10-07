@@ -5,6 +5,7 @@ import 'package:flutter_proj/Providers/ProductProvider.dart';
 import 'package:flutter_proj/Providers/Theme-provider.dart';
 import 'package:flutter_proj/Providers/Viewed_prod.dart';
 import 'package:flutter_proj/Providers/cartProvider.dart';
+import 'package:flutter_proj/Providers/orderProvider.dart';
 import 'package:flutter_proj/Screens/auth/forgotpassword.dart';
 import 'package:flutter_proj/Screens/auth/login_page.dart';
 import 'package:flutter_proj/Screens/auth/register.dart';
@@ -20,6 +21,7 @@ import 'Inner Screens/FeedScreen.dart';
 import 'Inner Screens/OnSaleScreens.dart';
 import 'Inner Screens/product_details.dart';
 import 'Providers/whislistProvider.dart';
+import 'Screens/future_screen.dart';
 void main() {
   runApp( MyApp());
 }
@@ -78,6 +80,9 @@ final Future<FirebaseApp> _firebaseIntialization = Firebase.initializeApp();
             }),
             ChangeNotifierProvider(create: (_){
               return ViewedProdProvider();
+            }),
+            ChangeNotifierProvider(create: (_){
+              return orderProvider();
             })
           ],
           child :Consumer<themeProvider>(
@@ -87,7 +92,7 @@ final Future<FirebaseApp> _firebaseIntialization = Firebase.initializeApp();
               title: 'MultiStore App',
               theme: Styles.themeData(a, context),
               debugShowCheckedModeBanner: false,
-              home:Btm_screeen(),
+              home:Fetch_Screen(),
                 routes: {
                   OnsaleScreen.routeName : (context) => OnsaleScreen(),
                   FeedScreen.routeName : (context) => FeedScreen(),

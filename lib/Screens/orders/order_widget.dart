@@ -1,40 +1,57 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_proj/Inner%20Screens/product_details.dart';
+import 'package:flutter_proj/Providers/ProductProvider.dart';
+import 'package:flutter_proj/models/orderModel.dart';
 import 'package:flutter_proj/services/GobalVariables.dart';
 import 'package:flutter_proj/services/Utils.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/cartModel.dart';
 
 class OrderWidget extends StatefulWidget {
-  const OrderWidget({Key? key}) : super(key: key);
+   OrderWidget({Key? key}) : super(key: key);
 
   @override
   State<OrderWidget> createState() => _OrderWidgetState();
 }
 
 class _OrderWidgetState extends State<OrderWidget> {
+  late String orderDateToShow;
+  @override
+  void didChangeDependencies() {
+    final ordermodel = Provider.of<OrderModel>(context);
+    var orderDate = ordermodel.orderDate.toDate();
+    orderDateToShow = '${orderDate.day}/${orderDate.month}/${orderDate.year}';
+
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
     Size size = Utils(context).Getsize;
-
+    final ordermodel = Provider.of<OrderModel>(context);
+    final productprovider = Provider.of<productProvider>(context);
+    final currprov = productprovider.findById(ordermodel.productId);
     return ListTile(
       onTap: () {
         GlobalVariable.routeTo(
             context: context, routeName: ProductDetails.routeName);
       },
-      subtitle: const Text('paid: \$ 12.9'),
+      subtitle:  Text('paid: \$ ${double.parse(ordermodel.price)} '),
       leading: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
         child: FancyShimmerImage(
           width: size.width * 0.2,
           imageUrl:
-              'https://media.istockphoto.com/photos/red-apple-picture-id184276818?k=20&m=184276818&s=612x612&w=0&h=QxOcueqAUVTdiJ7DVoCu-BkNCIuwliPEgtAQhgvBA_g=',
+              ordermodel.imageUrl,
         ),
       ),
-      title: TextWidget(title: "Title", color: color,fontweight: 18,istitle: true,),
-      trailing: TextWidget(title: "03/12/23",color: color,fontweight: 18,istitle: true),
+      title: TextWidget(title: '${currprov.title}', color: color,fontweight: 18,istitle: true,),
+      trailing: TextWidget(title: "$orderDateToShow",color: color,fontweight: 18,istitle: true),
     );
   }
 }

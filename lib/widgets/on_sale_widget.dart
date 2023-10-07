@@ -15,9 +15,14 @@ import 'package:provider/provider.dart';
 
 import '../consts/firebaseconnection.dart';
 import 'Heart_btn.dart';
-class OnSaleWidget extends StatelessWidget {
+class OnSaleWidget extends StatefulWidget {
   const OnSaleWidget({Key? key}) : super(key: key);
 
+  @override
+  State<OnSaleWidget> createState() => _OnSaleWidgetState();
+}
+
+class _OnSaleWidgetState extends State<OnSaleWidget> {
   @override
   Widget build(BuildContext context) {
     Color color = Utils(context).color;
@@ -62,16 +67,27 @@ class OnSaleWidget extends StatelessWidget {
                           Row(
                             children: [
                               GestureDetector(
-                                onTap:isInCart? null: (){
+                                onTap: () async {
                                   final User? user = authInstance!.currentUser;
                                   if(user == null){
                                     GlobalVariable.waringDailog(title: "Auth Error", subtitle: "Login to add to cart", fn: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> LoginPage()));}, context: context);
                                     return;
                                   }
                                   else {
-                                    cartprovier.addProductToList(
-                                        productId: productModel.id,
-                                        quantity: 1);
+                                    // print(cartprovier.getCartItems[productModel.id]!.quantity);
+                                      if(!isInCart) {
+                                        print('done');
+                                        await cartprovier.addToCart(
+                                            productId: productModel.id,
+                                            quantity: 1, context: context);
+                                      }
+                                      else{
+                                        print('done');
+                                       await  cartprovier.removeOneItem(prodId: productModel.id,
+                                           cartId: cartprovier.getCartItems[productModel.id]!.id, quantity:cartprovier.getCartItems[productModel.id]!.quantity );
+                                      }
+
+
                                   }},
 
                                 child: Icon(isInCart ? IconlyBold.bag2:IconlyLight.bag2,size: 22,color:isInCart ? Colors.green:color ,),

@@ -86,12 +86,12 @@ class _cartWidgetState extends State<cartWidget> {
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Row(
                         children: [
-                              _quantityButton(color: Colors.red, icon: CupertinoIcons.minus ,fn: (){
+                              _quantityButton(color: Colors.red, icon: CupertinoIcons.minus ,fn: () async {
                                   if(_quantitiyValue.text == '1'){
                                     return;
                                   }
                                   else{
-                                    cartprovider.ReduceQuantityByOne(productModel.id);
+                                    await cartprovider.ReduceQuantityByOne(prodId:productModel.id,quantity: int.parse(_quantitiyValue.text));
                                     _quantitiyValue.text = (int.parse(_quantitiyValue.text) - 1).toString();
                                   }
                               }),
@@ -112,8 +112,8 @@ class _cartWidgetState extends State<cartWidget> {
                               ],
                             ),
                           ),
-                          _quantityButton(color: Colors.green, icon: CupertinoIcons.plus ,fn: (){
-                            cartprovider.IncreaseQuantityByOne(productModel.id);
+                          _quantityButton(color: Colors.green, icon: CupertinoIcons.plus ,fn: () async {
+                           await cartprovider.IncreaseQuantityByOne(prodId:productModel.id,quantity: int.parse(_quantitiyValue.text));
                             _quantitiyValue.text = (int.parse(_quantitiyValue.text) + 1).toString();
                           }),
 
@@ -129,8 +129,8 @@ class _cartWidgetState extends State<cartWidget> {
                 child: Column(
                   children: [
                     InkWell(
-                      onTap: (){
-                        cartprovider.removeOneItem(productModel.id);
+                      onTap: () async {
+                        await cartprovider.removeOneItem(cartId: cartmodel.id,prodId: cartmodel.prodid,quantity: cartmodel.quantity);
                       },
                       child: Icon(CupertinoIcons.cart_badge_minus,color: Colors.red,size: 20,),
                     ),
@@ -138,7 +138,7 @@ class _cartWidgetState extends State<cartWidget> {
 
                     HeartBTN(productId: productModel.id,),
                     SizedBox(height: 8,),
-                    TextWidget(title: "\$ ${usedPrice}", color: color, fontweight: 20,maxlines: 1,istitle: true,)
+                    TextWidget(title: "\$ ${usedPrice * int.parse(_quantitiyValue.text)}", color: color, fontweight: 20,maxlines: 1,istitle: true,)
                   ],
                 ),
               )

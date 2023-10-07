@@ -25,6 +25,7 @@ class FeedItems extends StatefulWidget {
 
 class _FeedItemsState extends State<FeedItems> {
   TextEditingController Kg_size = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -58,7 +59,7 @@ class _FeedItemsState extends State<FeedItems> {
             children: [
               FancyShimmerImage(
                 imageUrl: productModel.imageUrl,
-                height: size.height *0.11,width: size.width*0.15,boxFit: BoxFit.fill,
+                height: size.height *0.08,width: size.width*0.15,boxFit: BoxFit.fill,
               ),
               Padding(padding: EdgeInsets.all(10),
               child: Row(
@@ -104,7 +105,7 @@ class _FeedItemsState extends State<FeedItems> {
               Spacer(),
               Container(
                 width: double.infinity,
-                child: TextButton(onPressed: isInCart ?  null: (){
+                child: TextButton(onPressed: isInCart ?  null: () async {
                   final User? user = authInstance.currentUser;
                   if(user == null){
                     GlobalVariable.waringDailog(title: "Auth Error", subtitle: "Login to add to cart", fn: (){
@@ -112,7 +113,8 @@ class _FeedItemsState extends State<FeedItems> {
                     }, context: context);
                     return;
                   }
-                  cartprovider.addProductToList(productId: productModel.id, quantity: int.parse(Kg_size.text));
+                 await cartprovider.addToCart(productId: productModel.id, quantity: int.parse(Kg_size.text), context: context);
+                  await cartprovider.fetchCart();
                 },  child:
                     TextWidget(title:isInCart? "In cart": "Add to cart",color: color,fontweight: 18,maxlines: 1,),
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).cardColor),

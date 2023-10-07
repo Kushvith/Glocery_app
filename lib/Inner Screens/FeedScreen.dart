@@ -9,6 +9,9 @@ import 'package:flutter_proj/widgets/feed_items.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
 import 'package:provider/provider.dart';
 
+import '../Providers/ProductProvider.dart';
+import '../Providers/ProductProvider.dart';
+
 class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
 
@@ -19,12 +22,21 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
+  TextEditingController _searchController = TextEditingController();
+
+  FocusNode _searchFocused = FocusNode();
+  List<ProductModel> listProductSearch = [];
+  @override
+  void initState() {
+    final productprovider = Provider.of<productProvider>(context,listen: false);
+    productprovider.fetch_products();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final productprovider = Provider.of<productProvider>(context);
     List<ProductModel> getProducts = productprovider.getProduct;
-    TextEditingController _searchController = TextEditingController();
-    FocusNode _searchFocused = FocusNode();
+
     @override
     void dispose() {
       // TODO: implement dispose
@@ -56,6 +68,13 @@ class _FeedScreenState extends State<FeedScreen> {
               child: TextField(
                 controller: _searchController,
                 focusNode: _searchFocused,
+                onChanged: (valuee){
+                print(valuee);
+                setState(() {
+                  listProductSearch = productprovider.SearchQuery(valuee);
+                  print(listProductSearch);
+                });
+              },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -82,7 +101,8 @@ class _FeedScreenState extends State<FeedScreen> {
               ),
             ),
           ),
-          _isEmpty ? Center(
+          _searchController.text.isNotEmpty &&
+              listProductSearch.isEmpty? Center(
             child: Column(
               mainAxisAlignment:  MainAxisAlignment.center,
               children: [
@@ -94,20 +114,27 @@ class _FeedScreenState extends State<FeedScreen> {
               ],
             ),
           ):  Flexible(
-            child: GridView.count(crossAxisCount: 2,
+            child:  GridView.count(
+              crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              childAspectRatio: size.width/(size.height*0.65),
-              children : List.generate(getProducts.length, (index) => ChangeNotifierProvider.value(
-                value: getProducts[index],
-                child: FeedItems(
-
-                ),
-              )),
+              childAspectRatio: size.width / (size.height * 0.55),
+              children: List.generate(
+                  _searchController.text.isNotEmpty
+                      ? listProductSearch.length
+                      : getProducts.length,
+                      (index) => ChangeNotifierProvider.value(
+                    value: _searchController.text.isNotEmpty
+                        ? listProductSearch[index]
+                        : getProducts[index],
+                    child: FeedItems(),
+                  )),
             ),
           ),
         ],
       ),
     );
   }
+
+
 }

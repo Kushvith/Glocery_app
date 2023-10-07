@@ -196,13 +196,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                             ),
                             Spacer(),
                             InkWell(
-                              onTap: (){
+                              onTap: () async {
                                 final User? user = authInstance.currentUser;
                                 if(user == null){
                                   GlobalVariable.waringDailog(title: "Auth Error", subtitle: "Login to add to cart", fn: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));}, context: context);
                                   return;
                                 }
-                                cartprovider.addProductToList(productId: productModel.id, quantity: int.parse(_quantitiyValue.text));
+                                await cartprovider.addToCart(productId: productModel.id, quantity: int.parse(_quantitiyValue.text),context: context);
+                                await cartprovider.fetchCart();
                               },
                               child: Material(
                                 color: Colors.green,

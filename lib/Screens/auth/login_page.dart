@@ -12,6 +12,7 @@ import 'package:flutter_proj/widgets/google_btn.dart';
 import 'package:flutter_proj/widgets/textWidget.dart';
 
 import '../../consts/firebaseconnection.dart';
+import '../future_screen.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
   static const routeName = "/loginpage";
@@ -46,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
             email: _emailController.text.toLowerCase().trim(),
             password: _passwordController.text.trim());
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context)=> Btm_screeen()));
+            MaterialPageRoute(builder: (context)=> Fetch_Screen()));
         print("Successfully Logged in");
       }
       on FirebaseException catch(error){

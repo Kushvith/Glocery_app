@@ -11,6 +11,7 @@ import 'package:flutter_proj/widgets/textWidget.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../btm_screen.dart';
+import '../future_screen.dart';
 import '../loadingManager.dart';
 class Register_Screen extends StatefulWidget {
   const Register_Screen({Key? key}) : super(key: key);
@@ -55,12 +56,13 @@ bool _isloading = false;
       _key.currentState!.save();
       try{
         final FirebaseAuth authInstance= FirebaseAuth.instance;
-        final User? user = authInstance.currentUser;
-        final uid = user!.uid;
         await   authInstance.createUserWithEmailAndPassword(
             email: _emailController.text.toLowerCase().trim(),
             password: _passwordController.text.trim());
-
+        final User? user = authInstance.currentUser;
+        final uid = user!.uid;
+        user.updateDisplayName(_nameController.text);
+        user.reload();
         await FirebaseFirestore.instance.collection('users').doc(uid).set(
          {
            'id':uid,
@@ -73,8 +75,9 @@ bool _isloading = false;
          }
 
         );
+        
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context)=> Btm_screeen()));
+            MaterialPageRoute(builder: (context)=> Fetch_Screen()));
         print("Successfully registered");
       }
       on FirebaseException catch(error){

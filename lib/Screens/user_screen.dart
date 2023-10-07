@@ -42,7 +42,7 @@ class _userScreenState extends State<userScreen> {
 Future<void> getuserData() async{
   final FirebaseAuth authInstance= FirebaseAuth.instance;
   final User? user = authInstance.currentUser;
-  final uid = user!.uid;
+
     setState(() {
       _isloading = true;
     });
@@ -53,7 +53,7 @@ Future<void> getuserData() async{
       return;
     }
     try{
-
+      final uid = user!.uid;
         final DocumentSnapshot userDoc = await
             FirebaseFirestore.instance.collection('users').doc(uid).get();
 
@@ -89,7 +89,7 @@ Future<void> getuserData() async{
     bool open = false;
     final FirebaseAuth authInstance= FirebaseAuth.instance;
     final User? user = authInstance.currentUser;
-    final uid = user!.uid;
+
     return SafeArea(
       child: LoadingManager(
         isLoading: _isloading,

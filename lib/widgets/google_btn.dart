@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_proj/Screens/btm_screen.dart';
@@ -17,10 +18,25 @@ class Googlebtn extends StatelessWidget {
         final googleAuth = await googleAccount.authentication;
         if (googleAuth.accessToken != null && googleAuth.idToken != null) {
           try {
-            await authInstance.signInWithCredential(
+           final authResult = await authInstance.signInWithCredential(
                 GoogleAuthProvider.credential(idToken: googleAuth.idToken,
                     accessToken: googleAuth.accessToken)
             );
+           if(authResult.additionalUserInfo!.isNewUser) {
+             print(1);
+             await FirebaseFirestore.instance.collection('users').doc(uid).set(
+                 {
+                   'id': authResult.user!.uid,
+                   'name': authResult.user!.displayName,
+                   'email': authResult.user!.email,
+                   'shipping-address': '',
+                   'userwhislist': [],
+                   'userCart': [],
+                   'CreatedAt': Timestamp.now()
+                 });
+           }else{
+             print(2);
+           }
             Navigator.of(context).push(MaterialPageRoute(builder:
                 (context) => Btm_screeen()));
           }

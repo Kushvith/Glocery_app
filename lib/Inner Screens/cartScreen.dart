@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_proj/Providers/ProductProvider.dart';
+import 'package:flutter_proj/Providers/cartProvider.dart';
 import 'package:flutter_proj/models/productModel.dart';
 
 import 'package:flutter_proj/services/Utils.dart';
+import 'package:flutter_proj/services/empty_screen.dart';
 import 'package:flutter_proj/widgets/Cat_widget.dart';
 import 'package:flutter_proj/widgets/feed_items.dart';
 import 'package:flutter_proj/widgets/on_sale_widget.dart';
@@ -13,21 +15,23 @@ import 'package:provider/provider.dart';
 class CatScreen extends StatefulWidget {
   const CatScreen({Key? key}) : super(key: key);
 
-  static  const routeName = '/CatScreen';
+  static const routeName = '/CatScreen';
 
   @override
   State<CatScreen> createState() => _CatScreenState();
 }
 
 class _CatScreenState extends State<CatScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  FocusNode _searchFocused = FocusNode();
+  List<ProductModel> listProductSearch = [];
   @override
   Widget build(BuildContext context) {
     final productprovider = Provider.of<productProvider>(context);
+
     final catname = ModalRoute.of(context)!.settings.arguments as String;
     List<ProductModel> getProducts = productprovider.findCategoryName(catname);
 
-    TextEditingController _searchController = TextEditingController();
-    FocusNode _searchFocused = FocusNode();
     @override
     void dispose() {
       // TODO: implement dispose
@@ -41,14 +45,22 @@ class _CatScreenState extends State<CatScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
-          onTap: (){
+          onTap: () {
             Navigator.pop(context);
           },
-          child: Icon(IconlyLight.arrowLeft2,color: color,),
+          child: Icon(
+            IconlyLight.arrowLeft2,
+            color: color,
+          ),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 1,
-        title: TextWidget(title: "Our Products",color: color,fontweight: 18,istitle: true,),
+        title: TextWidget(
+          title: "Our Products",
+          color: color,
+          fontweight: 18,
+          istitle: true,
+        ),
       ),
       body: Column(
         children: [
@@ -59,56 +71,87 @@ class _CatScreenState extends State<CatScreen> {
               child: TextField(
                 controller: _searchController,
                 focusNode: _searchFocused,
+                onChanged: (valuee) {
+                  print(valuee);
+                  setState(() {
+                    listProductSearch = productprovider.SearchQuery(valuee);
+                    print(listProductSearch);
+                  });
+                },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                          color: Colors.green
-                      )
-                  ),
+                      borderSide: BorderSide(color: Colors.green)),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                        color: Colors.green
-                    ),
+                    borderSide: BorderSide(color: Colors.green),
                   ),
                   hintText: "what is there in your mind",
                   prefixIcon: Icon(IconlyLight.search),
                   suffix: IconButton(
-                    onPressed: (){
+                    onPressed: () {
                       _searchController.clear();
                       _searchFocused.unfocus();
                     },
-                    icon: Icon(Icons.close,color: Colors.red,),
+                    icon: Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-          getProducts.isEmpty ? Center(
-            child: Column(
-              mainAxisAlignment:  MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Image.asset('assets/images/box.png',width: 250,),
+          getProducts.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Image.asset(
+                          'assets/images/box.png',
+                          width: 250,
+                        ),
+                      ),
+                      Center(
+                          child: Text(
+                        "No products \n need to be added",
+                        style: TextStyle(
+                            color: color,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700),
+                        textAlign: TextAlign.center,
+                      )),
+                    ],
+                  ),
+                )
+              : Flexible(
+                  child: _searchController.text.isNotEmpty &&
+                          listProductSearch.isEmpty
+                      ? EmptyScreen(
+                          imagepath: 'assets/images/box.png',
+                          title: 'Product Not Found',
+                          subtitle: 'Search not found',
+                          ButtonText: 'Browse',
+                          maintitle: catname)
+                      : GridView.count(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: size.width / (size.height * 0.55),
+                          children: List.generate(
+                              _searchController.text.isNotEmpty
+                                  ? listProductSearch.length
+                                  : getProducts.length,
+                              (index) => ChangeNotifierProvider.value(
+                                    value: _searchController.text.isNotEmpty
+                                        ? listProductSearch[index]
+                                        : getProducts[index],
+                                    child: CatWidget(),
+                                  )),
+                        ),
                 ),
-                Center(child: Text("No products \n need to be added",style: TextStyle(color: color,fontSize: 20,fontWeight: FontWeight.w700),textAlign: TextAlign.center, )),
-              ],
-            ),
-          ):  Flexible(
-            child: GridView.count(crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: size.width/(size.height*0.45),
-              children : List.generate(getProducts.length, (index) => ChangeNotifierProvider.value(
-                value: getProducts[index],
-                child: CatWidget(
-
-                ),
-              )),
-            ),
-          ),
         ],
       ),
     );
