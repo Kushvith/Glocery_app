@@ -1,16 +1,16 @@
-# flutter_proj
+# Glossary App
+**User-Friendly Interface:** Ensure that your app has an intuitive and easy-to-navigate user interface. This includes a clean design, simple menus, and clear categorization of products.
 
-A new Flutter project.
+**Product Listings:** Organize your products into categories and provide detailed descriptions, images, prices, and availability information. Allow users to search products based on their preferences.
 
-## Getting Started
+**Shopping Cart and Checkout:** Implement a shopping cart where users can add products and review their selections before proceeding to checkout. Ensure a secure and hassle-free checkout process.
 
-This project is a starting point for a Flutter application.
+**Dark Mode and Light Mode:** Implement a toggle for users to switch between dark mode and light mode themes. This can make your app visually appealing and cater to users' preferences.
+##some of the screen shots added here
 
-A few resources to get you started if this is your first Flutter project:
+# Glosary Admin Web pannel 
+Glosary admin is one for the important module of the project its helps `add`,`delete` and `modify` the products 
+this also have the module to handle the `customers orders`
+Link for the app [glosary_admin]('')
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
